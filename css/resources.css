@@ -11,6 +11,7 @@
   font-weight: 800;
   color: #1937ad;
   margin-bottom: 10px;
+  margin-top: 90px;
 }
 
 .gad-laws .subtitle {
@@ -80,5 +81,6 @@
 
   .gad-laws h1 {
     font-size: 40px;
+    margin-top: 80px;
   }
 }

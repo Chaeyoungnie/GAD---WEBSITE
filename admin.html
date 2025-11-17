@@ -77,21 +77,25 @@
   <div id="calendar-list" class="post-list"><p>No activities found.</p></div>
 </div>
 
-    <!-- ACTIVITIES TAB -->
-    <div class="tab-content" id="activities" style="display:none;">
-      <h2>Post Activity</h2>
-      <form id="activity-form">
-        <input type="text" id="activity-title" placeholder="Activity Title" required><br>
-        <input type="text" id="activity-author" placeholder="Author"><br>
-        <textarea id="activity-desc" placeholder="Description"></textarea><br>
-        <input type="file" id="activity-image" accept="image/*"><br>
-        <p id="activity-status"></p>
-        <button type="submit">Publish Activity</button>
-      </form>
+<!-- ✅ ACTIVITIES TAB -->
+<div class="tab-content" id="activities" style="display:none;">
+  <h2>Post Activity</h2>
+  <form id="activity-form">
+    <select id="activity-year" required>
+  <option value="" disabled selected>Select Year</option>
+</select>
+    <input type="text" id="activity-title" placeholder="Activity Title" required><br>
+    <input type="text" id="activity-author" placeholder="Author"><br>
+    <textarea id="activity-desc" placeholder="Description"></textarea><br>
+    <input type="file" id="activity-image" accept="image/*"><br>
+    <p id="activity-status"></p>
+    <button type="submit">Publish Activity</button>
+  </form>
 
-      <h3>Activities</h3>
-      <div id="activities-list" class="post-list"><p>No posts found.</p></div>
-    </div>
+  <h3>Activities per Year</h3>
+  <div id="activities-list" class="post-list"><p>No posts found.</p></div>
+</div>
+
 
     <!-- 📸 DOCUMENTATIONS TAB -->
     <div class="tab-content" id="documentations" style="display:none;">
@@ -119,6 +123,6 @@
       document.getElementById(tabName).style.display = "block";
     }
   </script>
-
+<script type="module" src="script/home.js"></script>
 </body>
 </html>

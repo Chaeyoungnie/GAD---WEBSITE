@@ -18,19 +18,20 @@ async function loadActivity() {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const data = docSnap.data();
+  const data = docSnap.data();
 
-      container.innerHTML = `
-        <div class="activity-header">
-          <h1>${data.title}</h1>
-          <p class="activity-meta">${data.date} — ${data.author}</p>
-        </div>
-        <img src="${data.imageUrl}" alt="${data.title}" class="activity-image">
-        <div class="activity-body">
-          <p>${data.description}</p>
-        </div>
-      `;
-    } else {
+  container.innerHTML = `
+    <div class="blog-post">
+      <img src="${data.imageUrl}" alt="${data.title}" class="blog-image">
+      <h1 class="blog-title">${data.title}</h1>
+      <p class="blog-date">${data.date} — ${data.author}</p>
+      <div class="blog-content">
+        <p>${data.description}</p>
+      </div>
+    </div>
+  `;
+}
+ else {
       container.innerHTML = "<p>❌ Activity not found.</p>";
     }
   } catch (err) {

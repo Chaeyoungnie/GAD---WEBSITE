@@ -4,7 +4,8 @@ import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/fir
 const yearButtonsContainer = document.getElementById("yearButtons");
 const yearActivityContainer = document.getElementById("yearActivityContainer");
 
-let groupedActivities = {}; // store grouped activities globally
+let groupedActivities = {}; 
+let allActivities = [];     // store all activities
 
 // Load activities from Firestore
 async function loadActivities() {
@@ -18,12 +19,17 @@ async function loadActivities() {
       return;
     }
 
-    // Group activities by year
     groupedActivities = {};
+    allActivities = [];
+
+    // Group activities by year
     snap.forEach(docSnap => {
       const data = docSnap.data();
       const id = docSnap.id;
       const year = data.year || "Unknown Year";
+
+      allActivities.push({ id, ...data });
+
       if (!groupedActivities[year]) groupedActivities[year] = [];
       groupedActivities[year].push({ id, ...data });
     });
@@ -31,8 +37,15 @@ async function loadActivities() {
     // Sort years descending
     const years = Object.keys(groupedActivities).sort((a, b) => b - a);
 
-    // Render year buttons
+    // Create "All" button first
+    const allBtn = document.createElement("button");
+    allBtn.textContent = "All";
+    allBtn.classList.add("year-btn", "active"); // default active
+    allBtn.addEventListener("click", () => showAllActivities(allBtn));
     yearButtonsContainer.innerHTML = "";
+    yearButtonsContainer.appendChild(allBtn);
+
+    // Create year buttons
     years.forEach(year => {
       const btn = document.createElement("button");
       btn.textContent = year;
@@ -41,8 +54,8 @@ async function loadActivities() {
       yearButtonsContainer.appendChild(btn);
     });
 
-    // Initially show a message
-    yearActivityContainer.innerHTML = "<p style='text-align:center;'>Select a year to view activities.</p>";
+    // Show ALL activities by default
+    showAllActivities(allBtn);
 
   } catch (err) {
     console.error("Error loading activities:", err);
@@ -51,35 +64,61 @@ async function loadActivities() {
   }
 }
 
+// Show ALL activities
+function showAllActivities(btn) {
+  document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  yearActivityContainer.innerHTML = "";
+
+  allActivities.forEach(act => {
+    const card = createActivityCard(act);
+    yearActivityContainer.appendChild(card);
+  });
+}
+
 // Show activities for a specific year
 function showActivitiesForYear(year, btn) {
-  // Highlight the active button
   document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
 
   const activities = groupedActivities[year];
   yearActivityContainer.innerHTML = "";
 
-  
-
   activities.forEach(act => {
-    const card = document.createElement("div");
-    card.classList.add("activity-card");
-    card.innerHTML = `
-      ${act.imageUrl ? `<img src="${act.imageUrl}" alt="${act.title}" class="activity-img">` : ""}
-      <div class="activity-info">
-        <h3>${act.title}</h3>
-        <p>${act.description}</p>
-      </div>
-    `;
-
-    // Click redirects to activity page with ID
-    card.addEventListener("click", () => {
-      window.location.href = `activity.html?id=${act.id}`;
-    });
-
+    const card = createActivityCard(act);
     yearActivityContainer.appendChild(card);
   });
+}
+
+// Function to truncate text to a certain number of words
+function truncateText(text, wordLimit) {
+  if (!text) return "";
+  const words = text.split(" ");
+  if (words.length <= wordLimit) return text;
+  return words.slice(0, wordLimit).join(" ") + "...";
+}
+
+// Reusable card generator with word limitation
+function createActivityCard(act) {
+  const card = document.createElement("div");
+  card.classList.add("activity-card");
+
+  const truncatedDescription = truncateText(act.description, 50); // limit to 20 words
+
+  card.innerHTML = `
+    ${act.imageUrl ? `<img src="${act.imageUrl}" alt="${act.title}" class="activity-img">` : ""}
+    <div class="activity-info">
+      <h3>${act.title}</h3>
+      <p>${truncatedDescription}</p>
+    </div>
+  `;
+
+  card.addEventListener("click", () => {
+    window.location.href = `activity.html?id=${act.id}`;
+  });
+
+  return card;
 }
 
 window.addEventListener("DOMContentLoaded", loadActivities);

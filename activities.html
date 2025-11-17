@@ -12,31 +12,46 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo"><a href="home.html">Administrative Service <span>Gender and Development Site</span></a></div>
+<nav class="navbar">
+  <a href="home.html" class="logo">
+    <img src="images/White - Copy.png" alt="Logo">
+
+    <div class="logo-text">
+      Administrative Service 
+      <span>Gender and Development Site</span>
+    </div>
+  </a>
+
+
     <div class="burger" id="burger">
       <div class="line"></div>
       <div class="line"></div>
       <div class="line"></div>
     </div>
     <ul class="nav-links" id="nav-links">
-      <li><a href="home.html">Home</a></li>
-      <li><a href="About.html">About</a></li>
-      <li><a href="#">Activities</a></li>
-      <li><a href="resources.html">Resources</a></li>
+      <li><a href="home.html">HOME</a></li>
+      <li><a href="About.html">ABOUT</a></li>
+      <li><a href="activities.html">ACTIVITIES</a></li>
+      <li><a href="resources.html">RESOURCES</a></li>
     </ul>
-  </nav>
+</nav>
 
 <div class="banner">
   <img src="images/4ft x 11ft Streamer.png" alt="Government Banner">
 </div>
 
 
-  <section class="blog-section">
-    <h1>RECENT ACTIVITIES</h1>
-    <div class="blog-grid" id="activityContainer"></div>
-    <!-- Popup Modal for Activity Details -->
+<section class="blog-section">
+  <h1>ACTIVITIES COMPILATION</h1>
+
+  <!-- Year Buttons -->
+  <div id="yearButtons" class="year-buttons"></div>
+
+  <!-- Container for blog-style posts -->
+  <div id="yearActivityContainer" class="year-activity-container"></div>
+</section>
+
+<!-- ✅ Your existing modal for details -->
 <div id="activityModal" class="activity-modal">
   <div class="activity-modal-content">
     <span class="activity-close">&times;</span>
@@ -44,9 +59,8 @@
   </div>
 </div>
 
-  </section>
-
   <script type="module" src="script/activities.js"></script>
+  <script type="module" src="script/activities_public.js"></script>
 
   <footer class="footer">
   <div class="footer-wrapper">  
@@ -79,5 +93,6 @@
 
   </div>
 </footer>
+<script type="module" src="script/home.js"></script>
 </body>
 </html>

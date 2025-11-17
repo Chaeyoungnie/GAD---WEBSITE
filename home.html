@@ -14,33 +14,41 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo"><img src="images/viber_image_2023-11-23_10-01-18-552.png"></img><a href="home.html">Administrative Service <span>Gender and Development Site</span></a></div>
+<nav class="navbar">
+  <a href="home.html" class="logo">
+    <img src="images/White - Copy.png" alt="Logo">
+
+    <div class="logo-text">
+      Administrative Service 
+      <span>Gender and Development Site</span>
+    </div>
+  </a>
+
+
     <div class="burger" id="burger">
       <div class="line"></div>
       <div class="line"></div>
       <div class="line"></div>
     </div>
     <ul class="nav-links" id="nav-links">
-      <li><a href="home.html">Home</a></li>
-      <li><a href="About.html">About</a></li>
-      <li><a href="activities.html">Activities</a></li>
-      <li><a href="resources.html">Resources</a></li>
+      <li><a href="home.html">HOME</a></li>
+      <li><a href="About.html">ABOUT</a></li>
+      <li><a href="activities.html">ACTIVITIES</a></li>
+      <li><a href="resources.html">RESOURCES</a></li>
     </ul>
-  </nav>
+</nav>
 
 <div class="banner">
   <img src="images/4ft x 11ft Streamer.png" alt="Government Banner">
 </div>
 
-<!-- AUTO CARD CAROUSEL -->
+
 <section class="image-slider">
   <h1>GAD DOCUMENTATIONS</h1>
   <div class="card-slider" id="doc-slider">
-    <!-- Firestore images will load here dynamically -->
   </div>
 
-  <!-- Controls (move them outside for clarity) -->
+
   <div class="slider-controls">
     <button class="prev">&#10094;</button>
     <button class="next">&#10095;</button>
@@ -78,7 +86,7 @@ transition from an aspiration to a tangible reality.
 </section>
 
 
-<!-- === TOP TABS === -->
+
 <div class="top-banner">
   <div class="banner-button active" data-tab="announcements">
     <img src="your-announcements-image.jpg" alt="Announcements">
@@ -92,7 +100,7 @@ transition from an aspiration to a tangible reality.
 
   <div class="banner-button" data-tab="calendar">
     <img src="your-calendar-image.jpg" alt="Calendar">
-    <span>CALENDAR OF ACTIVITIES</span>
+    <span>CALENDAR OF<Br> ACTIVITIES</span>
   </div>
 
   <div class="banner-button" data-tab="hotlines">
@@ -101,19 +109,20 @@ transition from an aspiration to a tangible reality.
   </div>
 </div>
 
-<!-- === TAB CONTENT === -->
+
 <div class="tab-content">
-  <!-- Announcements Tab -->
+
   <div id="announcements" class="tab-pane active">
   </div>
 
-  <!-- Events Tab -->
+
   <div id="events" class="tab-pane">
   </div>
 
-<!-- Calendar Tab -->
+
 <div id="calendar" class="tab-pane">
   <div class="calendar-wrapper">
+
     <div class="calendar-header">
       <button id="prev-month">◀</button>
       <h2 id="calendar-month-year">
@@ -121,25 +130,14 @@ transition from an aspiration to a tangible reality.
       </h2>
       <button id="next-month">▶</button>
     </div>
-    <div class="calendar-grid">
-      <!-- Day Headers (Sun, Mon, etc.) -->
-      <div class="calendar-day-header">Sun</div>
-      <div class="calendar-day-header">Mon</div>
-      <div class="calendar-day-header">Tue</div>
-      <div class="calendar-day-header">Wed</div>
-      <div class="calendar-day-header">Thu</div>
-      <div class="calendar-day-header">Fri</div>
-      <div class="calendar-day-header">Sat</div>
 
-      <!-- Calendar Days (1, 2, 3, ..., 31) -->
-      <div class="calendar-day">1</div>
-      <div class="calendar-day">2</div>
-      <div class="calendar-day">3</div>
-      <div class="calendar-day">4</div>
-      <!-- Add more days here or dynamically generate them using JS -->
+    <div class="calendar-grid" id="calendar-grid">
+      <!-- Weekday headers AND days will be dynamically inserted -->
     </div>
+
   </div>
 </div>
+
 
 
   <!-- Hotlines Tab -->

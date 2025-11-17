@@ -162,11 +162,12 @@ async function deletePost({ id, type, container }) {
 async function postActivity() {
   const title = document.getElementById("activity-title").value.trim();
   const description = document.getElementById("activity-desc").value.trim();
+  const year = document.getElementById("activity-year").value;
   const file = document.getElementById("activity-image")?.files?.[0];
   const status = document.getElementById("activity-status");
 
-  if (!title || !description) {
-    status.textContent = "⚠️ Fill all activity fields.";
+  if (!title || !description || !year) {
+    status.textContent = "⚠️ Fill all fields including year.";
     return;
   }
 
@@ -179,6 +180,7 @@ async function postActivity() {
       title,
       description,
       imageUrl,
+      year,
       createdAt: serverTimestamp()
     });
 
@@ -191,6 +193,25 @@ async function postActivity() {
   }
 }
 
+// ✅ Dynamically populate year options from 2022 up to current year + 2
+function populateYearDropdown() {
+  const select = document.getElementById("activity-year");
+  if (!select) return;
+
+  const startYear = 2022;
+  const currentYear = new Date().getFullYear();
+  const futureYear = currentYear + 2; // allow posting for future years
+
+  for (let y = futureYear; y >= startYear; y--) {
+    const option = document.createElement("option");
+    option.value = y;
+    option.textContent = y;
+    select.appendChild(option);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", populateYearDropdown);
+
 /* ✅ Display Activities (with Edit/Delete) */
 async function displayActivities() {
   const container = document.getElementById("activities-list");
@@ -201,30 +222,59 @@ async function displayActivities() {
   const snap = await getDocs(q);
 
   container.innerHTML = "";
-  let found = false;
+  if (snap.empty) {
+    container.innerHTML = `<p>No activities yet.</p>`;
+    return;
+  }
 
+  // Group by year
+  const grouped = {};
   snap.forEach(docSnap => {
-    const d = docSnap.data();
-    found = true;
-
-    const card = document.createElement("div");
-    card.classList.add("post-card");
-
-    card.innerHTML = `
-      ${d.imageUrl ? `<img src="${d.imageUrl}" class="post-img">` : ""}
-      <h4>${d.title}</h4>
-      <p>${d.description}</p>
-      <div class="actions">
-        <button class="edit-activity-btn" data-id="${docSnap.id}">✏️ Edit</button>
-        <button class="delete-activity-btn" data-id="${docSnap.id}">🗑️ Delete</button>
-      </div>
-    `;
-
-    container.appendChild(card);
+    const data = docSnap.data();
+    const year = data.year || "Unknown Year";
+    if (!grouped[year]) grouped[year] = [];
+    grouped[year].push({ id: docSnap.id, ...data });
   });
 
-  if (!found) container.innerHTML = `<p>No activities yet.</p>`;
+  // Sort years descending
+  const years = Object.keys(grouped).sort((a, b) => b - a);
 
+  years.forEach(year => {
+    const yearButton = document.createElement("button");
+    yearButton.textContent = year;
+    yearButton.classList.add("year-btn");
+
+    const yearSection = document.createElement("div");
+    yearSection.classList.add("year-section");
+    yearSection.style.display = "none";
+
+    // Activities under this year
+    grouped[year].forEach(act => {
+      const card = document.createElement("div");
+      card.classList.add("post-card");
+      card.innerHTML = `
+        ${act.imageUrl ? `<img src="${act.imageUrl}" class="post-img">` : ""}
+        <h4>${act.title}</h4>
+        <p>${act.description}</p>
+        <div class="actions">
+          <button class="edit-activity-btn" data-id="${act.id}">✏️ Edit</button>
+          <button class="delete-activity-btn" data-id="${act.id}">🗑️ Delete</button>
+        </div>
+      `;
+      yearSection.appendChild(card);
+    });
+
+    // Toggle visibility
+    yearButton.addEventListener("click", () => {
+      yearSection.style.display =
+        yearSection.style.display === "none" ? "block" : "none";
+    });
+
+    container.appendChild(yearButton);
+    container.appendChild(yearSection);
+  });
+
+  // Event Listeners for Edit/Delete
   container.querySelectorAll(".edit-activity-btn").forEach(btn =>
     btn.addEventListener("click", () => enterEditActivity(btn.dataset.id))
   );
@@ -233,6 +283,7 @@ async function displayActivities() {
     btn.addEventListener("click", () => deleteActivity(btn.dataset.id))
   );
 }
+
 
 /* ✅ Edit Activity */
 async function enterEditActivity(id) {

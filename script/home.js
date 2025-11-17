@@ -3,9 +3,15 @@ import {
   collection, query, orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* -----------------------------
-   DOM Containers
------------------------------- */
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('nav-links');
+
+burger.addEventListener('click', () => {
+  navLinks.classList.toggle('active');  
+  burger.classList.toggle('toggle');   
+});
+
+
 const announcementsContainer = document.getElementById("announcements");
 const eventsContainer = document.getElementById("events");
 const hotlinesContainer = document.getElementById("hotlines");
@@ -15,14 +21,10 @@ const docSlider = document.getElementById("doc-slider");
 const prevBtn = document.querySelector(".prev");
 const nextBtn = document.querySelector(".next");
 
-/* -----------------------------
-   Modal Elements
------------------------------- */
+
 let calendarEvents = [];
 
-/* -----------------------------
-   Fetch Posts (Announcements / Events)
------------------------------- */
+
 function fetchPosts(type, container) {
   const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
   onSnapshot(q, (snapshot) => {
@@ -125,7 +127,7 @@ function initSlider() {
 
   function updateSlides() {
     slides.forEach((slide, i) => {
-      slide.classList.remove("active", "prev", "next", "left2", "right2");
+      slide.classList.remove("active", "prev", "next");
       if (i === current) slide.classList.add("active");
       else if (i === (current - 1 + slides.length) % slides.length) slide.classList.add("prev");
       else if (i === (current + 1) % slides.length) slide.classList.add("next");
@@ -172,7 +174,6 @@ function fetchHotlines() {
   hotlinesContainer.innerHTML = `<div class="hotline-container"></div>`;
   const container = hotlinesContainer.querySelector(".hotline-container");
 
-  // Hardcoded hotlines (replace with dynamic if needed)
   const hotlineData = [
     { title: "Gender-Related Hotlines", list: [
       { name: "PCW", number: "0919-333-4455" },
@@ -202,7 +203,7 @@ function fetchHotlines() {
 }
 
 /* -----------------------------
-   Calendar Logic with Clickable Events
+   Calendar Logic (with weekday header)
 ------------------------------ */
 let today = new Date();
 let currentMonth = today.getMonth();
@@ -218,24 +219,35 @@ function fetchCalendarEvents() {
   });
 }
 
+/* -----------------------------
+   UPDATED: Calendar Rendering + Weekday Header
+------------------------------ */
 function renderCalendar(month, year) {
   if (!calendarGrid || !monthYearLabel) return;
 
   calendarGrid.innerHTML = "";
-  const firstDay = new Date(year, month, 1).getDay();
-  const lastDate = new Date(year, month + 1, 0).getDate();
 
   const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(year, month));
   monthYearLabel.textContent = `${monthName} ${year}`;
 
-  // Empty days before start
+  /* WEEKDAY HEADERS */
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  daysOfWeek.forEach(day => {
+    const div = document.createElement("div");
+    div.classList.add("calendar-weekday");
+    div.textContent = day;
+    calendarGrid.appendChild(div);
+  });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
   for (let i = 0; i < firstDay; i++) {
     const empty = document.createElement("div");
     empty.classList.add("calendar-day", "inactive");
     calendarGrid.appendChild(empty);
   }
 
-  // Render days
   for (let i = 1; i <= lastDate; i++) {
     const day = document.createElement("div");
     day.classList.add("calendar-day");
@@ -245,10 +257,9 @@ function renderCalendar(month, year) {
       day.classList.add("today");
     }
 
-    // Events on this day
-    const dayEvents = calendarEvents.filter(ev => ev.date === `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`);
+    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+    const dayEvents = calendarEvents.filter(ev => ev.date === dateStr);
 
-    // Add events to the day block
     dayEvents.forEach(ev => {
       const evDiv = document.createElement("div");
       evDiv.classList.add("calendar-event");
@@ -265,91 +276,65 @@ function renderCalendar(month, year) {
   }
 }
 
-
 function openCalendarModal(events) {
-  // Create overlay
   const overlay = document.createElement("div");
   overlay.classList.add("calendar-modal-overlay");
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0,0,0,0.7)";
-  overlay.style.display = "flex";
-  overlay.style.justifyContent = "center";
-  overlay.style.alignItems = "center";
-  overlay.style.zIndex = 9999;
+  overlay.style = `
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+  `;
 
-  // Create modal container
   const modal = document.createElement("div");
-  modal.classList.add("calendar-modal");
-  modal.style.backgroundColor = "#fff";
-  modal.style.borderRadius = "10px";
-  modal.style.padding = "20px";
-  modal.style.width = "90%";
-  modal.style.maxWidth = "600px";
-  modal.style.maxHeight = "80vh";
-  modal.style.overflowY = "auto";
-  modal.style.position = "relative";
+  modal.style = `
+    background: #fff; border-radius: 10px; padding: 20px;
+    width: 90%; max-width: 600px; max-height: 80vh;
+    overflow-y: auto; position: relative;
+  `;
 
-  // Close button
   const closeBtn = document.createElement("span");
   closeBtn.innerHTML = "&times;";
-  closeBtn.style.position = "absolute";
-  closeBtn.style.top = "10px";
-  closeBtn.style.right = "20px";
-  closeBtn.style.fontSize = "28px";
-  closeBtn.style.cursor = "pointer";
-  closeBtn.style.fontWeight = "bold";
+  closeBtn.style = `
+    position: absolute; top: 10px; right: 20px;
+    font-size: 28px; cursor: pointer; font-weight: bold;
+  `;
+
   modal.appendChild(closeBtn);
 
-  // Add events content
   events.forEach(ev => {
     const evDiv = document.createElement("div");
-    evDiv.classList.add("calendar-modal-event");
     evDiv.style.marginBottom = "20px";
-
     evDiv.innerHTML = `
-      ${ev.imageUrl ? `<img src="${ev.imageUrl}" alt="${ev.title}" style="width:100%; border-radius:8px; margin-bottom:10px;">` : ""}
-      <h2 style="margin:5px 0;">${ev.title}</h2>
-      <p style="margin:5px 0;">${ev.description}</p>
-      <small style="color:gray;">${ev.date}</small>
-      <hr style="margin-top:10px;">
+      ${ev.imageUrl ? `<img src="${ev.imageUrl}" style="width:100%; border-radius:8px;">` : ""}
+      <h2>${ev.title}</h2>
+      <p>${ev.description}</p>
+      <small>${ev.date}</small>
+      <hr>
     `;
-
     modal.appendChild(evDiv);
   });
 
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 
-  // Close modal events
   closeBtn.onclick = () => overlay.remove();
-  overlay.addEventListener("click", e => {
-    if (e.target === overlay) overlay.remove();
-  });
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 }
-
 
 /* -----------------------------
    Calendar Navigation
 ------------------------------ */
 document.getElementById("prev-month")?.addEventListener("click", () => {
   currentMonth--;
-  if (currentMonth < 0) {
-    currentMonth = 11;
-    currentYear--;
-  }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
   renderCalendar(currentMonth, currentYear);
 });
 
 document.getElementById("next-month")?.addEventListener("click", () => {
   currentMonth++;
-  if (currentMonth > 11) {
-    currentMonth = 0;
-    currentYear++;
-  }
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
   renderCalendar(currentMonth, currentYear);
 });
 
