@@ -77,8 +77,8 @@ async function displayPosts(type, containerId) {
       <h4>${d.title}</h4>
       <p>${d.description}</p>
       <div class="actions">
-        <button class="edit-btn" data-id="${docSnap.id}" data-type="${type}" data-container="${containerId}">✏️ Edit</button>
-        <button class="delete-btn" data-id="${docSnap.id}" data-type="${type}" data-container="${containerId}">🗑️ Delete</button>
+        <button class="edit-btn" data-id="${docSnap.id}" data-type="${type}" data-container="${containerId}"> Edit</button>
+        <button class="delete-btn" data-id="${docSnap.id}" data-type="${type}" data-container="${containerId}"> Delete</button>
       </div>
     `;
 
@@ -257,8 +257,8 @@ async function displayActivities() {
         <h4>${act.title}</h4>
         <p>${act.description}</p>
         <div class="actions">
-          <button class="edit-activity-btn" data-id="${act.id}">✏️ Edit</button>
-          <button class="delete-activity-btn" data-id="${act.id}">🗑️ Delete</button>
+          <button class="edit-activity-btn" data-id="${act.id}">Edit</button>
+          <button class="delete-activity-btn" data-id="${act.id}">Delete</button>
         </div>
       `;
       yearSection.appendChild(card);
@@ -503,8 +503,8 @@ async function displayCalendarActivities() {
       <p>${d.description}</p>
       <p><strong>Date:</strong> ${d.date}</p>
       <div class="actions">
-        <button class="edit-calendar-btn" data-id="${id}">✏️ Edit</button>
-        <button class="delete-calendar-btn" data-id="${id}">🗑️ Delete</button>
+        <button class="edit-calendar-btn" data-id="${id}">Edit</button>
+        <button class="delete-calendar-btn" data-id="${id}">Delete</button>
       </div>
     `;
 

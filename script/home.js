@@ -202,9 +202,7 @@ function fetchHotlines() {
   });
 }
 
-/* -----------------------------
-   Calendar Logic (with weekday header)
------------------------------- */
+
 let today = new Date();
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
@@ -219,9 +217,7 @@ function fetchCalendarEvents() {
   });
 }
 
-/* -----------------------------
-   UPDATED: Calendar Rendering + Weekday Header
------------------------------- */
+
 function renderCalendar(month, year) {
   if (!calendarGrid || !monthYearLabel) return;
 
@@ -230,7 +226,7 @@ function renderCalendar(month, year) {
   const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(year, month));
   monthYearLabel.textContent = `${monthName} ${year}`;
 
-  /* WEEKDAY HEADERS */
+
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   daysOfWeek.forEach(day => {
     const div = document.createElement("div");
@@ -323,9 +319,7 @@ function openCalendarModal(events) {
   overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 }
 
-/* -----------------------------
-   Calendar Navigation
------------------------------- */
+
 document.getElementById("prev-month")?.addEventListener("click", () => {
   currentMonth--;
   if (currentMonth < 0) { currentMonth = 11; currentYear--; }
@@ -338,9 +332,7 @@ document.getElementById("next-month")?.addEventListener("click", () => {
   renderCalendar(currentMonth, currentYear);
 });
 
-/* -----------------------------
-   Initialize All
------------------------------- */
+
 renderCalendar(currentMonth, currentYear);
 fetchPosts("announcement", announcementsContainer);
 fetchPosts("event", eventsContainer);

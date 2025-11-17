@@ -110,14 +110,82 @@ body {
   transition: all 0.3s ease;
 }
 
-
-@media (max-width: 768px) {
+@media (max-width: 1700px) {
   .nav-links {
     position: fixed;
     top: 58px;    
     right: 0;
     background-color: #5300a0;
     width: 180px;
+    max-height: 0; 
+    overflow: hidden;
+    flex-direction: column;
+    text-align: center;
+    transition: max-height 0.3s ease-out;
+    z-index: 1000;
+  }
+
+  .nav-links.active {
+    max-height: 250px; 
+    max-width: 180px;
+    background-color: #5300a0;
+  }
+
+  .nav-links li {
+    margin: 15px 0;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+
+  .burger.toggle .line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .burger.toggle .line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger.toggle .line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  .logo a {
+    font-size: 15px;
+  }
+
+  .logo img {
+     max-height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .navbar {
+  margin-left: 0px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #5300a0;
+  padding: 15px 25px;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+  .nav-links {
+    position: fixed;
+    top: 58px;    
+    right: 0;
+    background-color: #5300a0;
+    width: 100px;
     max-height: 0; 
     overflow: hidden;
     flex-direction: column;
@@ -433,9 +501,16 @@ body {
   padding-top: 45px;
 }
 
+@media (max-width: 1700px) {
+  .banner img {
+    padding-top: 28px;
+  }
+}
+
+
 @media (max-width: 768px) {
   .banner img {
-    padding-top: 17px;
+    padding-top: 5px;
   }
 }
 
@@ -660,7 +735,7 @@ body {
   }
 
   .banner-button {
-    width: 100%;
+    width: 219px;
     height: 120px;
   }
 
