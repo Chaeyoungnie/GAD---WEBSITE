@@ -272,6 +272,7 @@ function renderCalendar(month, year) {
   }
 }
 
+
 function openCalendarModal(events) {
   const overlay = document.createElement("div");
   overlay.classList.add("calendar-modal-overlay");
