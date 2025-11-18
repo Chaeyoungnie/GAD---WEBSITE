@@ -614,6 +614,16 @@ body {
 .announcement-item h1 {
   color: #4a148c;
   margin-bottom: 10px;
+  
+}
+
+
+@media (max-width: 420px){
+  .announcement-item h1 {
+    font-size: 17px;
+  }
+  
+
 }
 
 .announcement-item p {
@@ -622,6 +632,11 @@ body {
   line-height: 1.5;
 }
 
+@media (max-width: 420px) {
+  .announcement-item p {
+    font-size: 13px;
+  }
+}
 .announcement-item small {
   color: #777;
   margin-top: 10px;
