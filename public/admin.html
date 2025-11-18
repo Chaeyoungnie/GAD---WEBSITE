@@ -10,118 +10,180 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
+<div class="admin-container">
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">
-      <a href="home.html">Administrative Service <span>Gender and Development Site</span></a>
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <h2 class="sidebar-title">GAD Admin</h2>
+
+    <ul class="parent-menu">
+      <li class="parent-item" onclick="toggleChildMenu('home-child')">🏠 Home</li>
+      <ul class="child-menu" id="home-child" style="display:block">
+        <li onclick="openTab('tab-banner', this)" class="active">🖼 Banner</li>
+        <li onclick="openTab('tab-theme', this)">🎨 Theme</li>
+        <li onclick="openTab('tab-announcements', this)">📢 Announcements</li>
+        <li onclick="openTab('tab-events', this)">📅 Events</li>
+        <li onclick="openTab('tab-documentations', this)">📁 Documentations</li>
+        <li onclick="openTab('tab-calendar', this)">🗓 Calendar</li>
+      </ul>
+
+      <li class="parent-item" onclick="toggleChildMenu('activities-child')">📝 Activities</li>
+      <ul class="child-menu" id="activities-child">
+        <li onclick="openTab('tab-activities', this)">Activities Compilation</li>
+      </ul>
+
+      <li class="parent-item" onclick="toggleChildMenu('resources-child')">📚 Resources</li>
+      <ul class="child-menu" id="resources-child">
+        <li onclick="openTab('tab-resources', this)">Resources</li>
+      </ul>
+    </ul>
+  </aside>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main">
+
+    <!-- BANNER -->
+<section id="tab-banner" class="tab-content">
+  <h1>🖼 Banner</h1>
+
+  <div class="form-card">
+    <h3>Current Banner</h3>
+    <div class="banner-preview-wrapper" style="border-radius:8px; overflow:hidden; position:relative;">
+      <img src="" alt="Current Banner" id="banner-img" style="width:100%; display:block;">
     </div>
-  </nav>
-
-  <div class="admin-container">
-
-
-    <div class="tabs">
-      <button onclick="openTab('announcements')"> Announcements</button>
-      <button onclick="openTab('events')"> Events</button>
-      <button onclick="openTab('calendar')"> Calendar</button>
-      <button onclick="openTab('activities')"> Activities</button>
-      <button onclick="openTab('documentations')"> Documentations</button>
-    </div>
-
-
-    <div class="tab-content" id="announcements">
-      <h2>Post Announcement</h2>
-      <form id="ann-form">
-        <input type="text" id="ann-title" placeholder="Title" required><br>
-        <input type="text" id="ann-author" placeholder="Author"><br>
-        <textarea id="ann-desc" placeholder="Description"></textarea><br>
-        <input type="file" id="ann-image" accept="image/*"><br>
-        <p id="ann-status"></p>
-        <button type="submit">Publish Announcement</button>
-      </form>
-
-      <h3>Announcements</h3>
-      <div id="announcements-list" class="post-list"><p>No posts found.</p></div>
-    </div>
-
-
-    <div class="tab-content" id="events" style="display:none;">
-      <h2>Post Event</h2>
-      <form id="event-form">
-        <input type="text" id="event-title" placeholder="Event Title" required><br>
-        <input type="text" id="event-author" placeholder="Author"><br>
-        <textarea id="event-desc" placeholder="Description"></textarea><br>
-        <input type="file" id="event-image" accept="image/*"><br>
-        <p id="event-status"></p>
-        <button type="submit">Publish Event</button>
-      </form>
-
-      <h3>Events</h3>
-      <div id="events-list" class="post-list"><p>No posts found.</p></div>
-    </div>
-
-
-<div class="tab-content" id="calendar" style="display:none;">
-  <h2>Activities Calendar</h2>
-  <form id="calendar-form">
-    <input type="text" id="calendar-title" placeholder="Activity Title" required><br>
-    <textarea id="calendar-desc" placeholder="Description"></textarea><br>
-    <input type="date" id="calendar-date" required><br>
-    <input type="file" id="calendar-image" accept="image/*"><br>
-    <p id="calendar-status"></p>
-    <button type="submit">Add Activity</button>
-  </form>
-
-  <h3>Calendar Events</h3>
-  <div id="calendar-list" class="post-list"><p>No activities found.</p></div>
-</div>
-
-
-<div class="tab-content" id="activities" style="display:none;">
-  <h2>Post Activity</h2>
-  <form id="activity-form">
-    <select id="activity-year" required>
-  <option value="" disabled selected>Select Year</option>
-</select>
-    <input type="text" id="activity-title" placeholder="Activity Title" required><br>
-    <input type="text" id="activity-author" placeholder="Author"><br>
-    <textarea id="activity-desc" placeholder="Description"></textarea><br>
-    <input type="file" id="activity-image" accept="image/*"><br>
-    <p id="activity-status"></p>
-    <button type="submit">Publish Activity</button>
-  </form>
-
-  <h3>Activities per Year</h3>
-  <div id="activities-list" class="post-list"><p>No posts found.</p></div>
-</div>
-
-
-
-    <div class="tab-content" id="documentations" style="display:none;">
-      <h2>Upload Documentation Image</h2>
-      <form id="doc-form">
-        <input type="file" id="doc-image" accept="/*" required><br>
-        <p id="doc-status"></p>
-        <button type="submit">Upload Image</button>
-      </form>
-
-      <h3>Uploaded Images</h3>
-      <div id="docs-list" class="post-list"><p>No images uploaded yet.</p></div>
-    </div>
-
+    <button id="delete-banner-btn" style="margin-top:8px; display:none; width:100%; padding:10px; background:#e74c3c; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      Delete Banner
+    </button>
   </div>
 
-  <script type="module" src="script/admin.js"></script>
+  <div class="form-card">
+    <h3>Upload Banner</h3>
+    <form id="banner-form">
+      <input type="file" id="banner-image">
+      <button type="submit">Upload</button>
+    </form>
+    <p class="status" id="banner-status"></p>
+  </div>
+</section>
 
-  <script>
-    // Simple tab switching
-    function openTab(tabName) {
-      const tabs = document.querySelectorAll(".tab-content");
-      tabs.forEach(tab => tab.style.display = "none");
-      document.getElementById(tabName).style.display = "block";
-    }
-  </script>
-<script type="module" src="script/home.js"></script>
+
+
+
+
+    <!-- THEME -->
+    <section id="tab-theme" class="tab-content" style="display:none;">
+      <h1>🎨 Theme</h1>
+      <div class="form-card">
+        <h3>Change Theme</h3>
+        <form id="theme-form">
+          <input type="color" id="theme-color">
+          <button type="submit">Apply</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section id="tab-announcements" class="tab-content" style="display:none;">
+      <h1>📢 Announcements</h1>
+      <div class="form-card">
+        <h3>Add Announcement</h3>
+        <form id="ann-form">
+          <input id="ann-title" type="text" placeholder="Title">
+          <textarea id="ann-desc" placeholder="Description"></textarea>
+          <input id="ann-image" type="file">
+          <button type="submit">Post</button>
+        </form>
+        <p class="status" id="ann-status"></p>
+      </div>
+      <h2 class="list-title">All Announcements</h2>
+      <div id="announcements-list" class="grid-list"></div>
+    </section>
+
+    <!-- EVENTS -->
+    <section id="tab-events" class="tab-content" style="display:none;">
+      <h1>📅 Events</h1>
+      <div class="form-card">
+        <h3>Add Event</h3>
+        <form id="event-form">
+          <input id="event-title" type="text" placeholder="Title">
+          <textarea id="event-desc" placeholder="Description"></textarea>
+          <input id="event-image" type="file">
+          <button type="submit">Post</button>
+        </form>
+        <p class="status" id="event-status"></p>
+      </div>
+      <h2 class="list-title">All Events</h2>
+      <div id="events-list" class="grid-list"></div>
+    </section>
+
+    <!-- ACTIVITIES -->
+    <section id="tab-activities" class="tab-content" style="display:none;">
+      <h1>📝 Activities Compilation</h1>
+      <div class="form-card">
+        <h3>Add Activity</h3>
+        <form id="activity-form">
+          <input id="activity-title" type="text" placeholder="Title">
+          <textarea id="activity-desc" placeholder="Description"></textarea>
+          <select id="activity-year"></select>
+          <input id="activity-image" type="file">
+          <button type="submit">Post</button>
+        </form>
+        <p class="status" id="activity-status"></p>
+      </div>
+      <h2 class="list-title">Activities by Year</h2>
+      <div id="activities-list"></div>
+    </section>
+
+    <!-- DOCUMENTATIONS -->
+    <section id="tab-documentations" class="tab-content" style="display:none;">
+      <h1>📁 Documentations</h1>
+      <div class="form-card">
+        <h3>Upload Documentation</h3>
+        <form id="doc-form">
+          <input id="doc-image" type="file">
+          <button type="submit">Upload</button>
+        </form>
+        <p class="status" id="doc-status"></p>
+      </div>
+      <h2 class="list-title">All Documentations</h2>
+      <div id="docs-list" class="docs-grid"></div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="tab-calendar" class="tab-content" style="display:none;">
+      <h1>🗓 Calendar Activities</h1>
+      <div class="form-card">
+        <h3>Add Calendar Activity</h3>
+        <form id="calendar-form">
+          <input id="calendar-title" type="text" placeholder="Title">
+          <textarea id="calendar-desc" placeholder="Description"></textarea>
+          <input id="calendar-date" type="date">
+          <input id="calendar-image" type="file">
+          <button type="submit">Add</button>
+        </form>
+        <p class="status" id="calendar-status"></p>
+      </div>
+      <h2 class="list-title">Calendar Records</h2>
+      <div id="calendar-list" class="grid-list"></div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="tab-resources" class="tab-content" style="display:none;">
+      <h1>📚 Resources</h1>
+      <div class="form-card">
+        <h3>Add Resource</h3>
+        <form id="resources-form">
+          <input type="text" placeholder="Resource Name">
+          <input type="file">
+          <button type="submit">Upload</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script type="module" src="script/admin.js"></script>
 </body>
 </html>

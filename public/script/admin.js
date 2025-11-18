@@ -1,8 +1,37 @@
 import { db, uploadToCloudinary } from "./firebase.js";
 import {
   collection, addDoc, serverTimestamp,
-  query, orderBy, getDocs, doc, updateDoc, deleteDoc
+  query, orderBy, getDocs, doc, updateDoc, deleteDoc,
+  getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+// Toggle showing/hiding child menus
+function toggleChildMenu(id){
+  const menu = document.getElementById(id);
+  const isVisible = menu.style.display === 'block';
+  menu.style.display = isVisible ? 'none' : 'block';
+
+  document.querySelectorAll('.parent-item').forEach(p => p.classList.remove('active'));
+  const parent = menu.previousElementSibling;
+  parent.classList.add('active');
+}
+
+// Open a tab
+function openTab(id, el=null){
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(tab => tab.style.display='none');
+  // Show selected tab
+  document.getElementById(id).style.display='block';
+
+  if(el){
+    // Remove active from all child menu items
+    document.querySelectorAll('.child-menu li').forEach(c => c.classList.remove('active'));
+    // Mark the clicked child as active
+    el.classList.add('active');
+  }
+}
+
 
 /* ✅ Tab Switcher Global */
 window.openTab = function(tabName) {
@@ -606,3 +635,75 @@ window.addEventListener("DOMContentLoaded", () => {
   displayCalendarActivities();
   displayDocumentations();
 });
+
+/* ✅ Banner Upload, Display, and Delete */
+const bannerForm = document.getElementById("banner-form");
+const bannerInput = document.getElementById("banner-image");
+const bannerStatus = document.getElementById("banner-status");
+const bannerImg = document.getElementById("banner-img"); // select by ID
+const deleteBannerBtn = document.getElementById("delete-banner-btn");
+
+const bannerDocId = "site-banner"; // Firestore doc ID
+
+// Display current banner
+async function displayBanner() {
+  const docRef = doc(db, "banners", bannerDocId);
+  try {
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists() && docSnap.data().imageUrl) {
+      bannerImg.src = docSnap.data().imageUrl;
+      deleteBannerBtn.style.display = "block"; // show button
+    } else {
+      bannerImg.src = "";
+      deleteBannerBtn.style.display = "none"; // hide button
+    }
+  } catch (err) {
+    console.error(err);
+    bannerImg.src = "";
+    deleteBannerBtn.style.display = "none";
+  }
+}
+
+// Upload new banner
+bannerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = bannerInput.files[0];
+  if (!file) {
+    bannerStatus.textContent = "⚠️ Select a file first.";
+    return;
+  }
+
+  bannerStatus.textContent = "Uploading...";
+  try {
+    const imageUrl = await uploadToCloudinary(file);
+
+    await setDoc(doc(db, "banners", bannerDocId), {
+      imageUrl,
+      updatedAt: serverTimestamp()
+    });
+
+    bannerStatus.textContent = "✅ Banner uploaded!";
+    bannerInput.value = "";
+    displayBanner();
+  } catch (err) {
+    console.error(err);
+    bannerStatus.textContent = "❌ Upload failed.";
+  }
+});
+
+// Delete banner
+deleteBannerBtn.addEventListener("click", async () => {
+  if (!confirm("Delete the current banner?")) return;
+  try {
+    await deleteDoc(doc(db, "banners", bannerDocId));
+    bannerStatus.textContent = "✅ Banner deleted!";
+    displayBanner();
+  } catch (err) {
+    console.error(err);
+    bannerStatus.textContent = "❌ Failed to delete banner.";
+  }
+});
+
+// Load banner on page load
+window.addEventListener("DOMContentLoaded", displayBanner);

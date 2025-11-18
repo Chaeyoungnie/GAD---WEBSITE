@@ -1,205 +1,192 @@
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #8a2be2;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    main {
-      max-width: 600px;
-      margin: 30px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    input[type="text"], textarea, input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    button {
-      background-color: #8a2be2;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #6a1dbb;
-    }
-
-    #status {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    /* Optional: separate sections for Announcements, Events, News */
-    .section {
-      margin-bottom: 40px;
-    }
-
-    .section h3 {
-      color: #8a2be2;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #8a2be2;
-      padding-bottom: 5px;
-    }
-
-    .admin-container {
-  max-width: 700px;
-  margin: 70px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  margin-top: 130px;
+:root{
+  --sidebar-w:260px;
+  --accent:#750487;         /* Main violet */
+  --accent-light:#b361ff;   /* Light violet for hover/active */
+  --accent-dark:#4b0066;    /* Dark violet for hover */
+  --bg:#f4f0ff;             /* Light violet background */
+  --text-dark:#1a0033;      /* Dark text for readability */
 }
 
-.tabs {
+* { box-sizing: border-box; }
+
+body {
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;
+  background: var(--bg);
+  color: var(--text-dark);
+}
+
+.admin-container {
   display: flex;
-  gap: 10px;
+  min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 250px;
+  background-color: var(--accent-dark);
+  color: white;
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 1.5em;
   margin-bottom: 20px;
 }
 
-.tab-btn {
-  flex: 1;
-  padding: 10px;
+.sidebar-menu, .child-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu > li, .child-menu > li {
   cursor: pointer;
-  border: none;
-  background: #ddd;
-  font-size: 14px;
-  border-radius: 6px;
-  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 2px;
+  transition: background 0.2s;
 }
 
-.tab-btn.active {
-  background: #8a2be2;
-  color: white;
+.sidebar-menu > li:hover, .child-menu > li:hover {
+  background: var(--accent-light);
 }
 
-.tab-content {
-  display: none;
+.parent-item{
+  padding:10px 12px;
+  border-radius:8px;
+  background:#5b1a75;
+  margin-bottom:6px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  user-select:none;
+  transition: background 0.2s;
 }
 
-.tab-content.active {
-  display: block;
+.parent-item:hover{background: var(--accent-dark);}
+.parent-item.active{background: var(--accent); box-shadow: 0 4px 12px rgba(183,97,255,0.12);}
+
+.child-menu{
+  margin-top:4px;
+  padding-left:8px;
 }
 
-.preview {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 10px;
-  display: none;
-  border-radius: 8px;
+.child-menu.hidden{display:none}
+.child-menu li{
+  padding:8px 10px;
+  margin:6px 0;
+  border-radius:6px;
+  background:#75008d;
+  cursor:pointer;
+  transition:all .15s;
+  font-size:14px;
+}
+.child-menu li:hover{background: var(--accent-light);}
+.child-menu li.active{background: var(--accent);}
+
+/* ================= MAIN ================= */
+.main{
+  padding:22px;
+  width:calc(100% - var(--sidebar-w));
 }
 
-.post-list {
-  margin-top: 10px;
+.top-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
 }
 
-.post-card {
-  background: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+/* child tab bar (top horizontal) */
+.child-tabs {
+  display:flex;
+  gap:8px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.child-tabs button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid transparent;
+  background: var(--accent-light);
+  cursor:pointer;
+  color: var(--text-dark);
+}
+.child-tabs button.active{
+  background: var(--accent);
+  color:#fff;
+  border-color: rgba(0,0,0,0.04);
 }
 
-.post-img {
-  width: 100%;
-  border-radius: 6px;
-  margin-bottom: 8px;
+/* ================= Cards and Grid ================= */
+.form-card, .post-card, .docs-grid, .grid-list {
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  box-shadow: 0 6px 18px rgba(124,58,237,0.15);
 }
 
-.no-posts {
-  text-align: center;
-  opacity: .6;
-  padding: 6px;
-  font-style: italic;
+.form-card{margin-bottom:16px;}
+
+form input[type="text"], form textarea, form select, form input[type="date"]{
+  width:100%;
+  padding:10px 12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #d8b4fe;
+  font-size:14px;
 }
 
-.edit-modal {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex; justify-content: center; align-items: center;
+form input:focus, form textarea:focus, form select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(183,97,255,0.2);
 }
 
-.edit-modal .modal-content {
-  background: white; padding: 20px; border-radius: 6px;
-  width: 350px;
-}
-.post-img {
-  width:100%; height:200px; object-fit:cover; border-radius:6px;
-  margin-bottom:8px;
-}
-.edit-modal input, .edit-modal textarea {
-  width: 100%; margin-bottom:10px; padding:8px;
-}
-
-.year-btn {
-  display: block;
-  width: 100%;
-  background: #6a0dad;
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: 0.3s;
+form button, .btn {
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:8px;
+  border:none;
+  background: var(--accent);
+  color:#fff;
+  cursor:pointer;
+  transition: background 0.2s;
 }
 
-.year-btn:hover {
-  background: #540b9e;
+form button:hover, .btn:hover {
+  background: var(--accent-dark);
 }
 
-.year-section {
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
+.list-title{margin:12px 0; font-weight:600; color:#333;}
+
+.grid-list{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:8px;
 }
 
-.post-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  background: white;
+.post-card img{width:100%; height:140px; object-fit:cover; border-radius:8px; margin-bottom:8px}
+.post-card h4{margin:6px 0 4px; font-size:16px}
+.post-card p{font-size:14px; color:#444; margin:0}
+
+.docs-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.doc-item{position:relative; border-radius:8px; overflow:hidden}
+.doc-item img{width:100%; height:140px; object-fit:cover; display:block}
+
+/* ================= Responsive ================= */
+@media (max-width:900px){
+  .admin-container{flex-direction:column}
+  .sidebar{width:100%;height:auto;display:flex;flex-direction:row;gap:8px;overflow:auto;padding:12px}
+  .parent-item{min-width:120px;flex:0 0 auto}
+  .main{width:100%;padding:12px}
+  .grid-list{grid-template-columns:repeat(2,1fr)}
+  .docs-grid{grid-template-columns:repeat(2,1fr)}
 }

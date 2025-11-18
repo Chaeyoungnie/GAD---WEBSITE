@@ -1,6 +1,11 @@
 import { db } from "./firebase.js";
 import {
-  collection, query, orderBy, onSnapshot
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  doc,
+  getDoc   // <-- add this
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const burger = document.getElementById('burger');
@@ -340,3 +345,26 @@ fetchPosts("event", eventsContainer);
 fetchDocumentations();
 fetchHotlines();
 fetchCalendarEvents();
+
+
+async function fetchBanner() {
+  const bannerImg = document.getElementById("home-banner");
+  if (!bannerImg) return;
+
+  try {
+    const bannerRef = doc(db, "banners", "site-banner");
+    const bannerSnap = await getDoc(bannerRef);
+
+    if (bannerSnap.exists()) {
+      const data = bannerSnap.data();
+      bannerImg.src = data.imageUrl || "images/4ft x 11ft Streamer.png";
+    } else {
+      bannerImg.src = "images/4ft x 11ft Streamer.png"; // default banner
+    }
+  } catch (err) {
+    console.error("Error fetching banner:", err);
+    bannerImg.src = "images/4ft x 11ft Streamer.png"; // fallback
+  }
+}
+
+window.addEventListener("DOMContentLoaded", fetchBanner);
