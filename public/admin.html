@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAD Admin</title>
+
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="home.html">Administrative Service <span>Gender and Development Site</span></a>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+
+
+    <div class="tabs">
+      <button onclick="openTab('announcements')"> Announcements</button>
+      <button onclick="openTab('events')"> Events</button>
+      <button onclick="openTab('calendar')"> Calendar</button>
+      <button onclick="openTab('activities')"> Activities</button>
+      <button onclick="openTab('documentations')"> Documentations</button>
+    </div>
+
+
+    <div class="tab-content" id="announcements">
+      <h2>Post Announcement</h2>
+      <form id="ann-form">
+        <input type="text" id="ann-title" placeholder="Title" required><br>
+        <input type="text" id="ann-author" placeholder="Author"><br>
+        <textarea id="ann-desc" placeholder="Description"></textarea><br>
+        <input type="file" id="ann-image" accept="image/*"><br>
+        <p id="ann-status"></p>
+        <button type="submit">Publish Announcement</button>
+      </form>
+
+      <h3>Announcements</h3>
+      <div id="announcements-list" class="post-list"><p>No posts found.</p></div>
+    </div>
+
+
+    <div class="tab-content" id="events" style="display:none;">
+      <h2>Post Event</h2>
+      <form id="event-form">
+        <input type="text" id="event-title" placeholder="Event Title" required><br>
+        <input type="text" id="event-author" placeholder="Author"><br>
+        <textarea id="event-desc" placeholder="Description"></textarea><br>
+        <input type="file" id="event-image" accept="image/*"><br>
+        <p id="event-status"></p>
+        <button type="submit">Publish Event</button>
+      </form>
+
+      <h3>Events</h3>
+      <div id="events-list" class="post-list"><p>No posts found.</p></div>
+    </div>
+
+
+<div class="tab-content" id="calendar" style="display:none;">
+  <h2>Activities Calendar</h2>
+  <form id="calendar-form">
+    <input type="text" id="calendar-title" placeholder="Activity Title" required><br>
+    <textarea id="calendar-desc" placeholder="Description"></textarea><br>
+    <input type="date" id="calendar-date" required><br>
+    <input type="file" id="calendar-image" accept="image/*"><br>
+    <p id="calendar-status"></p>
+    <button type="submit">Add Activity</button>
+  </form>
+
+  <h3>Calendar Events</h3>
+  <div id="calendar-list" class="post-list"><p>No activities found.</p></div>
+</div>
+
+
+<div class="tab-content" id="activities" style="display:none;">
+  <h2>Post Activity</h2>
+  <form id="activity-form">
+    <select id="activity-year" required>
+  <option value="" disabled selected>Select Year</option>
+</select>
+    <input type="text" id="activity-title" placeholder="Activity Title" required><br>
+    <input type="text" id="activity-author" placeholder="Author"><br>
+    <textarea id="activity-desc" placeholder="Description"></textarea><br>
+    <input type="file" id="activity-image" accept="image/*"><br>
+    <p id="activity-status"></p>
+    <button type="submit">Publish Activity</button>
+  </form>
+
+  <h3>Activities per Year</h3>
+  <div id="activities-list" class="post-list"><p>No posts found.</p></div>
+</div>
+
+
+
+    <div class="tab-content" id="documentations" style="display:none;">
+      <h2>Upload Documentation Image</h2>
+      <form id="doc-form">
+        <input type="file" id="doc-image" accept="/*" required><br>
+        <p id="doc-status"></p>
+        <button type="submit">Upload Image</button>
+      </form>
+
+      <h3>Uploaded Images</h3>
+      <div id="docs-list" class="post-list"><p>No images uploaded yet.</p></div>
+    </div>
+
+  </div>
+
+  <script type="module" src="script/admin.js"></script>
+
+  <script>
+    // Simple tab switching
+    function openTab(tabName) {
+      const tabs = document.querySelectorAll(".tab-content");
+      tabs.forEach(tab => tab.style.display = "none");
+      document.getElementById(tabName).style.display = "block";
+    }
+  </script>
+<script type="module" src="script/home.js"></script>
+</body>
+</html>

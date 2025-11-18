@@ -1,0 +1,205 @@
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #8a2be2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"], textarea, input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background-color: #8a2be2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #6a1dbb;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Optional: separate sections for Announcements, Events, News */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h3 {
+      color: #8a2be2;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #8a2be2;
+      padding-bottom: 5px;
+    }
+
+    .admin-container {
+  max-width: 700px;
+  margin: 70px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-top: 130px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background: #ddd;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.tab-btn.active {
+  background: #8a2be2;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  display: none;
+  border-radius: 8px;
+}
+
+.post-list {
+  margin-top: 10px;
+}
+
+.post-card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.post-img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.no-posts {
+  text-align: center;
+  opacity: .6;
+  padding: 6px;
+  font-style: italic;
+}
+
+.edit-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+}
+
+.edit-modal .modal-content {
+  background: white; padding: 20px; border-radius: 6px;
+  width: 350px;
+}
+.post-img {
+  width:100%; height:200px; object-fit:cover; border-radius:6px;
+  margin-bottom:8px;
+}
+.edit-modal input, .edit-modal textarea {
+  width: 100%; margin-bottom:10px; padding:8px;
+}
+
+.year-btn {
+  display: block;
+  width: 100%;
+  background: #6a0dad;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.year-btn:hover {
+  background: #540b9e;
+}
+
+.year-section {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.post-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: white;
+}
