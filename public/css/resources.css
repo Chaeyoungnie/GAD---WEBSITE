@@ -168,11 +168,122 @@ section .subtitle {
 
 @media (max-width: 768px) {
   section h1 {
+    padding-top: 25px;
     font-size: 40px;
     margin-top: 80px;
   }
 
   .single {
     grid-column: span 1;
+  }
+}
+
+
+/* Responsive Styles */
+
+/* For devices with max-width of 1024px (Tablets) */
+@media (max-width: 1024px) {
+  section h1 {
+    font-size: 48px; /* Slightly smaller title */
+  }
+
+  .section-grid {
+    gap: 20px; /* Reduced gap between the items */
+  }
+
+  .section-box {
+    padding: 20px; /* Smaller padding for boxes */
+  }
+
+  .section-box h3 {
+    font-size: 20px; /* Smaller heading */
+  }
+
+  .section-box p {
+    font-size: 14px; /* Adjust description font size */
+  }
+
+  .section-box a {
+    padding: 8px 16px; /* Adjust button padding */
+  }
+
+  .single {
+    grid-column: span 1; /* Stack cards on smaller screens */
+  }
+}
+
+/* For devices with max-width of 768px (Small tablets and large mobile phones) */
+@media (max-width: 768px) {
+  section h1 {
+    font-size: 40px; /* Reduce the header font size */
+    margin-top: 80px;
+  }
+
+  section .subtitle {
+    font-size: 16px; /* Smaller subtitle */
+    margin-bottom: 40px;
+  }
+
+  .section-grid {
+    grid-template-columns: 1fr 1fr; /* Display cards in two columns */
+    gap: 15px; /* Adjust gap between items */
+  }
+
+  .section-box {
+    padding: 15px; /* Reduce padding */
+  }
+
+  .section-box h3 {
+    font-size: 18px; /* Smaller heading */
+  }
+
+  .section-box p {
+    font-size: 14px; /* Adjust description text size */
+  }
+
+  .section-box a {
+    padding: 8px 16px; /* Smaller button */
+  }
+
+  .single {
+    grid-column: span 1; /* Stack items */
+  }
+}
+
+/* For devices with max-width of 414px (iPhone XR and similar) */
+@media (max-width: 414px) {
+  section h1 {
+    font-size: 32px; /* Further reduce the header font size */
+    margin-top: 60px;
+  }
+
+  section .subtitle {
+    font-size: 14px; /* Even smaller subtitle */
+    margin-bottom: 30px;
+  }
+
+  .section-grid {
+    grid-template-columns: 1fr; /* Stack the cards in a single column */
+    gap: 10px; /* Tighten up the gap */
+  }
+
+  .section-box {
+    padding: 12px; /* Reduce padding even further */
+  }
+
+  .section-box h3 {
+    font-size: 16px; /* Smaller heading size */
+  }
+
+  .section-box p {
+    font-size: 12px; /* Smaller text size for descriptions */
+  }
+
+  .section-box a {
+    padding: 6px 12px; /* Smaller button */
+  }
+
+  .single {
+    grid-column: span 1; /* Stack cards */
   }
 }

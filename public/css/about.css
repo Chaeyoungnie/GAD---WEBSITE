@@ -26,7 +26,6 @@
   margin-bottom: 20px;
 }
 
-
 /* Level containers */
 .level {
   display: flex;
@@ -44,7 +43,7 @@
   padding: 20px;
   text-align: center;
   position: relative;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
 /* Photo — rectangular like sample */
@@ -94,4 +93,56 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   z-index: -1;
+}
+
+/* Responsive Design for iPhone XR (414px) and smaller devices */
+@media screen and (max-width: 414px) {
+  /* Adjust header size */
+  .team-title {
+    font-size: 40px; /* Decrease header font size */
+    padding: 30px 0;
+  }
+
+  /* Adjust the spacing between members */
+  .level {
+    gap: 20px; /* Reduce the gap between cards */
+    margin-bottom: 40px;
+  }
+
+  /* Adjust the card size for smaller screens */
+  .person {
+    width: 90%; /* Make the cards more responsive and take up more width */
+    padding: 15px;
+  }
+
+  /* Adjust the photo size for smaller screens */
+  .person-photo {
+    height: 250px; /* Reduce height for smaller screens */
+  }
+
+  /* Adjust name and role font size */
+  .person-name {
+    font-size: 22px; /* Reduce font size */
+  }
+
+  .person-role {
+    font-size: 16px; /* Reduce font size */
+  }
+
+  /* Adjust the member level titles */
+  .members-title {
+    font-size: 18px; /* Reduce the font size for titles */
+    padding: 12px 0;
+  }
+
+  /* Make the levels stack vertically */
+  .level {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Adjust the flag block at the top of each person card */
+  .person::before {
+    height: 100px; /* Reduce the height of the flag block */
+  }
 }

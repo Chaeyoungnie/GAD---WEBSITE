@@ -28,6 +28,11 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 360px) {
+  .navbar {
+    width: 70%;
+  }
+}
 
 .logo {
   display: flex;
