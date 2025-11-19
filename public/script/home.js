@@ -31,6 +31,7 @@ await loadResource("accomplishmentReports", "acc-grid");
 await loadResource("specialOrders", "so-grid");
 await loadResource("gadLaws", "gad-grid");
 await loadResource("dswdAgenda", "dswd-grid");
+await loadResource("genderlaws", "gl-grid");
 
 });
 

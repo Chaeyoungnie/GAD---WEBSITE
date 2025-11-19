@@ -4,10 +4,10 @@ import { collection, getDocs, query, orderBy } from 'https://www.gstatic.com/fir
 async function displayMembers() {
   const chairpersonList = document.getElementById('chairperson-list');
   const viceChairpersonList = document.getElementById('vice-chairperson-list');
-  const secretariatList = document.getElementById('secretariat-list');
+  const secretaryList = document.getElementById('secretariat-list');
   const membersList = document.getElementById('members-list');
 
-  if (!chairpersonList || !viceChairpersonList || !secretariatList || !membersList) {
+  if (!chairpersonList || !viceChairpersonList || !secretaryList || !membersList) {
     console.error('One or more member list containers are missing.');
     return;
   }
@@ -21,7 +21,7 @@ async function displayMembers() {
     // Clear all lists before displaying the new members
     chairpersonList.innerHTML = '';
     viceChairpersonList.innerHTML = '';
-    secretariatList.innerHTML = '';
+    secretaryList.innerHTML = '';
     membersList.innerHTML = '';
 
     // Loop through each member and classify by their role
@@ -35,7 +35,7 @@ async function displayMembers() {
       } else if (member.position === 'Vice-Chairperson') {
         viceChairpersonList.appendChild(memberCard);
       } else if (member.position === 'Secretary') {
-        secretariatList.appendChild(memberCard);
+        secretaryList.appendChild(memberCard);
       } else if (member.position === 'Member') {
         membersList.appendChild(memberCard);
       }

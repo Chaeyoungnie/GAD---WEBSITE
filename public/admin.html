@@ -170,8 +170,9 @@
       <select id="position" required>
         <option value="Chairperson">Chairperson</option>
         <option value="Vice-Chairperson">Vice-Chairperson</option>
-        <option value="Member">Member</option>
+        <option value="Alternate Vice-Chairperson">Alternate Vice-Chairperson</option>
         <option value="Secretary">Secretary</option>
+        <option value="Member">Member</option>
       </select><br>
 
       <label for="photo">Upload Photo:</label>
@@ -260,6 +261,31 @@
 <!-- RESOURCES -->
 <section id="tab-resources" class="tab-content" style="display:none;">
   <h1>📚 Resources</h1>
+
+  <!--GAD LAWS-->
+  <div class="form-card">
+    <h3>GAD LAWS</h3>
+
+    <form class="resource-form" data-type="genderlaws">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="genderlaws-list"></div>
+  </div>
 
   <!-- ACCOMPLISHMENT REPORTS -->
   <div class="form-card">

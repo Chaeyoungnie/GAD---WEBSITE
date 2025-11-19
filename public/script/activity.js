@@ -24,7 +24,6 @@ async function loadActivity() {
     <div class="blog-post">
       <img src="${data.imageUrl}" alt="${data.title}" class="blog-image">
       <h1 class="blog-title">${data.title}</h1>
-      <p class="blog-date">${data.date} — ${data.author}</p>
       <div class="blog-content">
         <p>${data.description}</p>
       </div>

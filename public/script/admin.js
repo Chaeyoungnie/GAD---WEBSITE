@@ -824,7 +824,23 @@ document.querySelectorAll(".resource-form").forEach(form => {
   });
 });
 
-// === DISPLAY RESOURCES WITH DELETE AND EDIT BUTTONS ===
+window.downloadPDF = function(url, filename = "file.pdf") {
+  fetch(url)
+    .then(resp => resp.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    })
+    .catch(err => {
+      console.error("Error downloading PDF:", err);
+    });
+};
+
+
+// === DISPLAY RESOURCES WITH DOWNLOAD AND EDIT BUTTONS ===
 async function displayResources(type) {
   const container = document.getElementById(`${type}-list`);
   if (!container) return;
@@ -853,10 +869,19 @@ async function displayResources(type) {
 
       const card = document.createElement("div");
       card.className = "resource-item";
+      
+      let fileLink = `<a href="${data.fileUrl}" target="_blank">Read More</a>`;
+      
+      // Check if the file is a PDF (based on file URL or MIME type)
+      if (data.fileUrl.endsWith(".pdf")) {
+        // Modify the link to make it download the PDF
+        fileLink = `<button onclick="downloadPDF('${data.fileUrl}', '${data.title}.pdf')">Download PDF</button>`;
+      }
+
       card.innerHTML = `
         <h4>${data.title}</h4>
         <p>${data.description}</p>
-        <a href="${data.fileUrl}" target="_blank">Read More</a>
+        ${fileLink}
         <div class="resource-actions">
           <button class="edit-btn" data-id="${docId}">✏️ Edit</button>
           <button class="delete-btn" data-id="${docId}">🗑️ Delete</button>
@@ -906,7 +931,8 @@ async function displayResources(type) {
 }
 
 // === INITIAL LOAD ===
-["accomplishmentReports", "specialOrders", "gadLaws", "dswdAgenda"].forEach(displayResources);
+["accomplishmentReports", "specialOrders", "gadLaws", "dswdAgenda", "genderlaws"].forEach(displayResources);
+
 
 document.getElementById('member-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -1084,9 +1110,6 @@ document.getElementById('edit-member-form').addEventListener('submit', async fun
     console.error('Error updating member:', error);
   }
 });
-
-
-
 
 // Delete member function
 window.deleteMember = async function (memberId) {
