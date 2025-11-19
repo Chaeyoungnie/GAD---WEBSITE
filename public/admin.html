@@ -67,20 +67,36 @@
 </section>
 
 
+<!-- CAMPAIGN THEME MANAGEMENT (Admin) -->
+<section id="tab-theme" class="tab-content" style="display:none;">
+  <h1>🎨 Campaign Theme</h1>
 
+  <div class="form-card">
+    <h3>Edit Campaign Theme</h3>
 
+    <form id="campaign-theme-form">
 
-    <!-- THEME -->
-    <section id="tab-theme" class="tab-content" style="display:none;">
-      <h1>🎨 Theme</h1>
-      <div class="form-card">
-        <h3>Change Theme</h3>
-        <form id="theme-form">
-          <input type="color" id="theme-color">
-          <button type="submit">Apply</button>
-        </form>
+      <label>Title</label>
+      <input type="text" id="theme-title" required>
+
+      <label>Description</label>
+      <textarea id="theme-description" rows="6" required></textarea>
+
+      <label>Theme Image</label>
+      <input type="file" id="theme-image" accept="image/*">
+
+      <div style="margin-top:10px;">
+        <p>Current Image:</p>
+        <img id="theme-image-preview" src="" style="max-width:250px;border-radius:6px;">
       </div>
-    </section>
+
+      <p id="theme-status" style="margin-top:10px;color:gray;"></p>
+
+      <button type="submit" class="submit-btn">💾 Save Changes</button>
+    </form>
+  </div>
+</section>
+
 
     <!-- ANNOUNCEMENTS -->
     <section id="tab-announcements" class="tab-content" style="display:none;">
@@ -167,18 +183,116 @@
       <div id="calendar-list" class="grid-list"></div>
     </section>
 
-    <!-- RESOURCES -->
-    <section id="tab-resources" class="tab-content" style="display:none;">
-      <h1>📚 Resources</h1>
-      <div class="form-card">
-        <h3>Add Resource</h3>
-        <form id="resources-form">
-          <input type="text" placeholder="Resource Name">
-          <input type="file">
-          <button type="submit">Upload</button>
-        </form>
-      </div>
-    </section>
+<!-- RESOURCES -->
+<section id="tab-resources" class="tab-content" style="display:none;">
+  <h1>📚 Resources</h1>
+
+  <!-- ACCOMPLISHMENT REPORTS -->
+  <div class="form-card">
+    <h3>Accomplishment Reports</h3>
+
+    <form class="resource-form" data-type="accomplishmentReports">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <!-- Upload Type -->
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <!-- File Upload -->
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+
+      <!-- URL Input (Hidden by default) -->
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="accomplishmentReports-list"></div>
+  </div>
+
+  <!-- SPECIAL ORDERS -->
+  <div class="form-card">
+    <h3>Special Orders</h3>
+
+    <form class="resource-form" data-type="specialOrders">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="specialOrders-list"></div>
+  </div>
+
+  <!-- GAD NATIONAL LAWS -->
+  <div class="form-card">
+    <h3>GAD National Laws</h3>
+
+    <form class="resource-form" data-type="gadLaws">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="gadLaws-list"></div>
+  </div>
+
+  <!-- DSWD AGENDA -->
+  <div class="form-card">
+    <h3>DSWD Agenda</h3>
+
+    <form class="resource-form" data-type="dswdAgenda">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="dswdAgenda-list"></div>
+  </div>
+
+</section>
+
 
   </main>
 

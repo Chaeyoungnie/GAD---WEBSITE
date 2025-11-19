@@ -1,37 +1,120 @@
 import { db } from "./firebase.js";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  doc,
-  getDoc   // <-- add this
+import { 
+  collection, query, orderBy, onSnapshot, doc, getDoc, where, limit, getDocs 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const burger = document.getElementById('burger');
-const navLinks = document.getElementById('nav-links');
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM fully loaded ✅");
 
-burger.addEventListener('click', () => {
-  navLinks.classList.toggle('active');  
-  burger.classList.toggle('toggle');   
+  // Navigation burger menu
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+  if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');  
+      burger.classList.toggle('toggle');   
+    });
+  }
+
+  // Load main data
+  await fetchBanner();
+  await loadCampaignThemePublic();
+
+  fetchPosts("announcement", document.getElementById("announcements"));
+  fetchPosts("event", document.getElementById("events"));
+  fetchDocumentations();
+  fetchHotlines();
+  fetchCalendarEvents();
+
+  // Load resources
+await loadResource("accomplishmentReports", "acc-grid");
+await loadResource("specialOrders", "so-grid");
+await loadResource("gadLaws", "gad-grid");
+await loadResource("dswdAgenda", "dswd-grid");
+
 });
 
+/* -----------------------------
+   Banner
+------------------------------ */
+async function fetchBanner() {
+  const bannerImg = document.getElementById("home-banner");
+  if (!bannerImg) return;
 
-const announcementsContainer = document.getElementById("announcements");
-const eventsContainer = document.getElementById("events");
-const hotlinesContainer = document.getElementById("hotlines");
-const calendarGrid = document.querySelector('.calendar-grid');
-const monthYearLabel = document.getElementById('calendar-month-year');
-const docSlider = document.getElementById("doc-slider");
-const prevBtn = document.querySelector(".prev");
-const nextBtn = document.querySelector(".next");
+  try {
+    const bannerSnap = await getDoc(doc(db, "banners", "site-banner"));
+    bannerImg.src = bannerSnap.exists() ? bannerSnap.data().imageUrl || "images/4ft x 11ft Streamer.png" : "images/4ft x 11ft Streamer.png";
+  } catch (err) {
+    console.error("Error fetching banner:", err);
+    bannerImg.src = "images/4ft x 11ft Streamer.png";
+  }
+}
 
+/* -----------------------------
+   Campaign Theme
+------------------------------ */
+async function loadCampaignThemePublic() {
+  try {
+    const themeDocSnap = await getDoc(doc(db, "siteSettings", "campaignTheme"));
+    if (!themeDocSnap.exists()) return;
 
-let calendarEvents = [];
+    const data = themeDocSnap.data();
+    const titleEl = document.getElementById("campaign-title");
+    const descEl = document.getElementById("campaign-description");
+    const imageEl = document.getElementById("campaign-image");
+
+    if (titleEl) titleEl.textContent = data.title || "";
+    if (descEl) descEl.innerHTML = data.description ? data.description.replace(/\n/g, "<br>") : "";
+    if (imageEl) imageEl.src = data.imageUrl || "";
+  } catch (err) {
+    console.error("Error loading campaign theme:", err);
+  }
+}
+
+/* -----------------------------
+   Load Resources
+------------------------------ */
+async function loadResource(type, containerId) {
+  try {
+    const qRes = query(
+      collection(db, "resources"), 
+      where("type", "==", type), 
+      orderBy("createdAt", "desc") // no limit
+    );
+    const snap = await getDocs(qRes);
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = ""; // clear old content
+
+    if (snap.empty) {
+      container.innerHTML = `<p>No resources found for ${type}.</p>`;
+      return;
+    }
+
+    snap.docs.forEach(doc => {
+      const data = doc.data();
+
+      const card = document.createElement("div");
+      card.className = "section-box"; // your GAD card design
+      card.innerHTML = `
+        <h3>${data.title || ""}</h3>
+        <p>${data.description || ""}</p>
+        <a href="${data.fileUrl || "#"}" target="_blank">Read More</a>
+      `;
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(`Error loading resources of type "${type}":`, err);
+  }
+}
 
 
 function fetchPosts(type, container) {
+  if (!container) return;
   const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
   onSnapshot(q, (snapshot) => {
     container.innerHTML = "";
     const filtered = snapshot.docs.filter(doc => doc.data().type === type);
@@ -47,9 +130,7 @@ function fetchPosts(type, container) {
       div.classList.add("announcement-item");
 
       const maxLength = 120;
-      const shortDesc = d.description.length > maxLength
-        ? d.description.substring(0, maxLength) + "…"
-        : d.description;
+      const shortDesc = d.description.length > maxLength ? d.description.substring(0, maxLength) + "…" : d.description;
 
       div.innerHTML = `
         ${d.imageUrl ? `<img src="${d.imageUrl}" class="announcement-img" />` : ""}
@@ -68,9 +149,6 @@ function fetchPosts(type, container) {
   });
 }
 
-/* -----------------------------
-   Open Post Modal
------------------------------- */
 function openPostModal(data) {
   const overlay = document.createElement("div");
   overlay.classList.add("post-modal-overlay");
@@ -86,21 +164,22 @@ function openPostModal(data) {
   document.body.appendChild(overlay);
 
   overlay.querySelector(".close-modal").onclick = () => overlay.remove();
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) overlay.remove();
-  });
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
 /* -----------------------------
-   Fetch Documentations Slider
+   Documentation Slider
 ------------------------------ */
+const docSlider = document.getElementById("doc-slider");
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+
 function fetchDocumentations() {
   if (!docSlider) return;
 
   const q = query(collection(db, "documentations"), orderBy("createdAt", "desc"));
   onSnapshot(q, (snapshot) => {
     docSlider.innerHTML = "";
-
     if (snapshot.empty) {
       docSlider.innerHTML = `<p>No documentation images uploaded yet.</p>`;
       return;
@@ -121,79 +200,41 @@ function fetchDocumentations() {
   });
 }
 
-/* -----------------------------
-   Slider Function
------------------------------- */
 function initSlider() {
   const slides = document.querySelectorAll(".card-slide");
-  if (slides.length === 0) return;
+  if (!slides.length) return;
 
   let current = 0;
-
-  function updateSlides() {
+  const updateSlides = () => {
     slides.forEach((slide, i) => {
       slide.classList.remove("active", "prev", "next");
       if (i === current) slide.classList.add("active");
       else if (i === (current - 1 + slides.length) % slides.length) slide.classList.add("prev");
       else if (i === (current + 1) % slides.length) slide.classList.add("next");
     });
-  }
+  };
 
-  nextBtn && (nextBtn.onclick = () => {
-    current = (current + 1) % slides.length;
-    updateSlides();
-  });
+  nextBtn && (nextBtn.onclick = () => { current = (current + 1) % slides.length; updateSlides(); });
+  prevBtn && (prevBtn.onclick = () => { current = (current - 1 + slides.length) % slides.length; updateSlides(); });
 
-  prevBtn && (prevBtn.onclick = () => {
-    current = (current - 1 + slides.length) % slides.length;
-    updateSlides();
-  });
-
-  setInterval(() => {
-    current = (current + 1) % slides.length;
-    updateSlides();
-  }, 4000);
-
+  setInterval(() => { current = (current + 1) % slides.length; updateSlides(); }, 4000);
   updateSlides();
 }
 
 /* -----------------------------
-   Tab Switching
------------------------------- */
-const tabButtons = document.querySelectorAll(".banner-button");
-const tabPanes = document.querySelectorAll(".tab-pane");
-
-tabButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach(b => b.classList.remove("active"));
-    tabPanes.forEach(p => p.classList.remove("active"));
-    button.classList.add("active");
-    document.getElementById(button.dataset.tab).classList.add("active");
-  });
-});
-
-/* -----------------------------
-   Fetch Hotlines
+   Hotlines
 ------------------------------ */
 function fetchHotlines() {
+  const hotlinesContainer = document.getElementById("hotlines");
+  if (!hotlinesContainer) return;
+
   hotlinesContainer.innerHTML = `<div class="hotline-container"></div>`;
   const container = hotlinesContainer.querySelector(".hotline-container");
 
   const hotlineData = [
-    { title: "Gender-Related Hotlines", list: [
-      { name: "PCW", number: "0919-333-4455" },
-      { name: "DSWD Women’s Desk", number: "(02) 931-8101" },
-      { name: "PNP Women & Children", number: "(02) 8536-6532" }
-    ]},
-    { title: "PWD Assistance", list: [
-      { name: "NCDA", number: "(02) 932-6422" },
-      { name: "DOH Disability Unit", number: "(02) 651-7800" }
-    ]},
-    { title: "General Concerns", list: [
-      { name: "Emergency", number: "911" },
-      { name: "DOH COVID-19", number: "1555" },
-      { name: "DSWD Hotline", number: "8888" }
-    ]}
+    { title: "Gender-Related Hotlines", list: [{ name: "PCW", number: "0919-333-4455" }, { name: "DSWD Women’s Desk", number: "(02) 931-8101" }, { name: "PNP Women & Children", number: "(02) 8536-6532" }]},
+    { title: "PWD Assistance", list: [{ name: "NCDA", number: "(02) 932-6422" }, { name: "DOH Disability Unit", number: "(02) 651-7800" }]},
+    { title: "General Concerns", list: [{ name: "Emergency", number: "911" }, { name: "DOH COVID-19", number: "1555" }, { name: "DSWD Hotline", number: "8888" }]}
   ];
 
   hotlineData.forEach(h => {
@@ -207,7 +248,13 @@ function fetchHotlines() {
   });
 }
 
+/* -----------------------------
+   Calendar
+------------------------------ */
+const calendarGrid = document.querySelector('.calendar-grid');
+const monthYearLabel = document.getElementById('calendar-month-year');
 
+let calendarEvents = [];
 let today = new Date();
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
@@ -217,20 +264,15 @@ function fetchCalendarEvents() {
   onSnapshot(q, (snapshot) => {
     calendarEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     renderCalendar(currentMonth, currentYear);
-  }, (error) => {
-    console.error("Error fetching calendar events:", error);
-  });
+  }, (error) => console.error("Error fetching calendar events:", error));
 }
-
 
 function renderCalendar(month, year) {
   if (!calendarGrid || !monthYearLabel) return;
 
   calendarGrid.innerHTML = "";
-
   const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(year, month));
   monthYearLabel.textContent = `${monthName} ${year}`;
-
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   daysOfWeek.forEach(day => {
@@ -258,7 +300,7 @@ function renderCalendar(month, year) {
       day.classList.add("today");
     }
 
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+    const dateStr = `${year}-${String(month + 1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
     const dayEvents = calendarEvents.filter(ev => ev.date === dateStr);
 
     dayEvents.forEach(ev => {
@@ -277,31 +319,17 @@ function renderCalendar(month, year) {
   }
 }
 
-
 function openCalendarModal(events) {
   const overlay = document.createElement("div");
   overlay.classList.add("calendar-modal-overlay");
-  overlay.style = `
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999;
-  `;
+  overlay.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;";
 
   const modal = document.createElement("div");
-  modal.style = `
-    background: #fff; border-radius: 10px; padding: 20px;
-    width: 90%; max-width: 600px; max-height: 80vh;
-    overflow-y: auto; position: relative;
-  `;
+  modal.style = "background:#fff;border-radius:10px;padding:20px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto;position:relative;";
 
   const closeBtn = document.createElement("span");
   closeBtn.innerHTML = "&times;";
-  closeBtn.style = `
-    position: absolute; top: 10px; right: 20px;
-    font-size: 28px; cursor: pointer; font-weight: bold;
-  `;
+  closeBtn.style = "position:absolute;top:10px;right:20px;font-size:28px;cursor:pointer;font-weight:bold;";
 
   modal.appendChild(closeBtn);
 
@@ -309,7 +337,7 @@ function openCalendarModal(events) {
     const evDiv = document.createElement("div");
     evDiv.style.marginBottom = "20px";
     evDiv.innerHTML = `
-      ${ev.imageUrl ? `<img src="${ev.imageUrl}" style="width:100%; border-radius:8px;">` : ""}
+      ${ev.imageUrl ? `<img src="${ev.imageUrl}" style="width:100%;border-radius:8px;">` : ""}
       <h2>${ev.title}</h2>
       <p>${ev.description}</p>
       <small>${ev.date}</small>
@@ -325,7 +353,9 @@ function openCalendarModal(events) {
   overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 }
 
-
+/* -----------------------------
+   Calendar Navigation
+------------------------------ */
 document.getElementById("prev-month")?.addEventListener("click", () => {
   currentMonth--;
   if (currentMonth < 0) { currentMonth = 11; currentYear--; }
@@ -338,33 +368,18 @@ document.getElementById("next-month")?.addEventListener("click", () => {
   renderCalendar(currentMonth, currentYear);
 });
 
-
+// Initialize calendar
 renderCalendar(currentMonth, currentYear);
-fetchPosts("announcement", announcementsContainer);
-fetchPosts("event", eventsContainer);
-fetchDocumentations();
-fetchHotlines();
-fetchCalendarEvents();
 
 
-async function fetchBanner() {
-  const bannerImg = document.getElementById("home-banner");
-  if (!bannerImg) return;
+const tabButtons = document.querySelectorAll(".banner-button");
+const tabPanes = document.querySelectorAll(".tab-pane");
 
-  try {
-    const bannerRef = doc(db, "banners", "site-banner");
-    const bannerSnap = await getDoc(bannerRef);
-
-    if (bannerSnap.exists()) {
-      const data = bannerSnap.data();
-      bannerImg.src = data.imageUrl || "images/4ft x 11ft Streamer.png";
-    } else {
-      bannerImg.src = "images/4ft x 11ft Streamer.png"; // default banner
-    }
-  } catch (err) {
-    console.error("Error fetching banner:", err);
-    bannerImg.src = "images/4ft x 11ft Streamer.png"; // fallback
-  }
-}
-
-window.addEventListener("DOMContentLoaded", fetchBanner);
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    tabButtons.forEach(b => b.classList.remove("active"));
+    tabPanes.forEach(p => p.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.tab)?.classList.add("active");
+  });
+});

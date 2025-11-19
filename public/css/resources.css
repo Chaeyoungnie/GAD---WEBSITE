@@ -84,3 +84,95 @@
     margin-top: 80px;
   }
 }
+
+
+/* Common Section Styling */
+section {
+  text-align: center;
+  max-width: 1200px;
+  margin: 60px auto;
+  font-family: 'Arial', sans-serif;
+  padding: 0 20px;
+}
+
+section h1 {
+  font-size: 60px;
+  font-weight: 800;
+  color: #1937ad;
+  margin-bottom: 10px;
+  margin-top: 90px;
+}
+
+section .subtitle {
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 50px;
+}
+
+/* Grid for sections with multiple cards */
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* Single card box (same as gad-laws .law-box) */
+.section-box {
+  background: #ffffff;
+  border: 2px solid #c165d4;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: left;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.section-box:hover {
+  background: #f7e9fb;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-box h3 {
+  color: #c165d4;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.section-box p {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.section-box a {
+  text-decoration: none;
+  color: white;
+  background: #c165d4;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.section-box a:hover {
+  background: #a14bb6;
+}
+
+/* For wider cards spanning two columns (optional) */
+.single {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  section h1 {
+    font-size: 40px;
+    margin-top: 80px;
+  }
+
+  .single {
+    grid-column: span 1;
+  }
+}

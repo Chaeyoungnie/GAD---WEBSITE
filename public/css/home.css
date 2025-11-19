@@ -65,6 +65,32 @@ body {
   font-weight: bold;
 }
 
+@media (max-width: 360px) {
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  font-weight: 10;
+}
+
+.logo-text {
+  font-size: 1.1rem;      
+  font-weight: bold;
+}
+
+.logo-text span {
+  font-size: 1rem;     
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.logo-text span {
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+}
 
 .logo img{
   height: 80px;
@@ -780,6 +806,16 @@ body {
   }
   .banner-button span {
     font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .banner-button {
+    width: 162px;
+  }
+
+    .banner-button span {
+    font-size: 14px;
   }
 }
 

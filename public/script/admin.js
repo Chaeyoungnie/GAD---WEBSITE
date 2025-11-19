@@ -1,7 +1,7 @@
 import { db, uploadToCloudinary } from "./firebase.js";
 import {
   collection, addDoc, serverTimestamp,
-  query, orderBy, getDocs, doc, updateDoc, deleteDoc,
+  query, where, orderBy, getDocs, doc, updateDoc, deleteDoc,
   getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -634,6 +634,7 @@ window.addEventListener("DOMContentLoaded", () => {
   displayActivities();
   displayCalendarActivities();
   displayDocumentations();
+  loadCampaignTheme();
 });
 
 /* ✅ Banner Upload, Display, and Delete */
@@ -707,3 +708,227 @@ deleteBannerBtn.addEventListener("click", async () => {
 
 // Load banner on page load
 window.addEventListener("DOMContentLoaded", displayBanner);
+
+async function loadCampaignTheme() {
+  const themeDoc = await getDoc(doc(db, "siteSettings", "campaignTheme"));
+
+  if (themeDoc.exists()) {
+    const data = themeDoc.data();
+    document.getElementById("theme-title").value = data.title || "";
+    document.getElementById("theme-description").value = data.description || "";
+    document.getElementById("theme-image-preview").src = data.imageUrl || "";
+  }
+}
+
+async function saveCampaignTheme(e) {
+  e.preventDefault();
+
+  const status = document.getElementById("theme-status");
+  const title = document.getElementById("theme-title").value.trim();
+  const description = document.getElementById("theme-description").value.trim();
+  const file = document.getElementById("theme-image").files[0];
+
+  status.textContent = "Uploading...";
+
+  try {
+    let imageUrl = document.getElementById("theme-image-preview").src;
+
+    if (file) {
+      imageUrl = await uploadToCloudinary(file);
+    }
+
+    await setDoc(doc(db, "siteSettings", "campaignTheme"), {
+      title,
+      description,
+      imageUrl,
+      updatedAt: serverTimestamp()
+    });
+
+    status.textContent = "✅ Saved!";
+    document.getElementById("theme-image").value = "";
+
+    loadCampaignTheme();
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "❌ Error saving.";
+  }
+}
+
+document.getElementById("campaign-theme-form")
+  .addEventListener("submit", saveCampaignTheme);
+
+
+document.querySelectorAll(".resource-form").forEach(form => {
+  const uploadTypeSelect = form.querySelector(".res-upload-type");
+  const fileInput = form.querySelector(".res-file");
+  const urlInput = form.querySelector(".res-url");
+  const previewDiv = form.querySelector(".res-preview");
+
+  // Toggle File / URL inputs
+  uploadTypeSelect.addEventListener("change", () => {
+    if (uploadTypeSelect.value === "file") {
+      fileInput.style.display = "block";
+      urlInput.style.display = "none";
+      previewDiv.innerHTML = ""; // clear preview
+    } else {
+      fileInput.style.display = "none";
+      urlInput.style.display = "block";
+      previewDiv.innerHTML = ""; // clear preview
+    }
+  });
+
+  // File preview
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) {
+      previewDiv.innerHTML = "";
+      return;
+    }
+
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewDiv.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width:200px;">`;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewDiv.innerHTML = `<p>Selected file: ${file.name}</p>`;
+    }
+  });
+
+  // Form submission
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const type = form.dataset.type;
+    const title = form.querySelector(".res-title").value.trim();
+    const description = form.querySelector(".res-desc").value.trim();
+    const uploadType = uploadTypeSelect.value;
+    const file = fileInput.files[0];
+    const urlValue = urlInput.value.trim();
+    const status = form.querySelector(".res-status");
+
+    if (!title || !description || (uploadType === "file" && !file) || (uploadType === "url" && !urlValue)) {
+      status.textContent = "⚠️ Please fill all fields.";
+      return;
+    }
+
+    status.textContent = "Uploading...";
+
+    try {
+      let fileUrl = "";
+
+      if (uploadType === "file") {
+        fileUrl = await uploadToCloudinary(file);
+      } else {
+        fileUrl = urlValue;
+      }
+
+      // Add resource to Firestore
+      await addDoc(collection(db, "resources"), {
+        title,
+        description,
+        fileUrl,
+        type,
+        createdAt: serverTimestamp()
+      });
+
+      status.textContent = "✅ Uploaded!";
+      form.reset();
+      fileInput.style.display = "block";
+      urlInput.style.display = "none";
+      previewDiv.innerHTML = "";
+
+      // Refresh the list of resources
+      displayResources(type);
+    } catch (err) {
+      console.error(err);
+      status.textContent = "❌ Error uploading.";
+    }
+  });
+});
+
+// === DISPLAY RESOURCES WITH DELETE AND EDIT BUTTONS ===
+async function displayResources(type) {
+  const container = document.getElementById(`${type}-list`);
+  if (!container) return;
+
+  container.innerHTML = "Loading...";
+
+  try {
+    const qRes = query(
+      collection(db, "resources"),
+      where("type", "==", type),
+      orderBy("createdAt", "desc")
+    );
+
+    const snap = await getDocs(qRes);
+
+    if (snap.empty) {
+      container.innerHTML = `<p>No resources found for ${type}.</p>`;
+      return;
+    }
+
+    container.innerHTML = ""; // Clear existing content
+
+    snap.docs.forEach(docItem => {
+      const data = docItem.data();
+      const docId = docItem.id;
+
+      const card = document.createElement("div");
+      card.className = "resource-item";
+      card.innerHTML = `
+        <h4>${data.title}</h4>
+        <p>${data.description}</p>
+        <a href="${data.fileUrl}" target="_blank">Read More</a>
+        <div class="resource-actions">
+          <button class="edit-btn" data-id="${docId}">✏️ Edit</button>
+          <button class="delete-btn" data-id="${docId}">🗑️ Delete</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      // Edit Button
+      card.querySelector(".edit-btn").addEventListener("click", () => {
+        const title = prompt("Edit Title:", data.title);
+        const description = prompt("Edit Description:", data.description);
+
+        if (title !== null && description !== null) {
+          // Update the resource in Firestore
+          updateDoc(doc(db, "resources", docId), {
+            title,
+            description
+          }).then(() => {
+            alert("Resource updated!");
+            displayResources(type); // Refresh the list
+          }).catch(err => {
+            console.error("Error updating resource:", err);
+          });
+        }
+      });
+
+      // Delete Button
+      card.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete this resource?")) return;
+
+        try {
+          // Delete resource from Firestore
+          await deleteDoc(doc(db, "resources", docId));
+          alert("Resource deleted successfully!");
+          displayResources(type); // Refresh the list
+        } catch (err) {
+          console.error("Error deleting resource:", err);
+          alert("Error deleting resource.");
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error loading resources:", err);
+    container.innerHTML = `<p>Error loading resources.</p>`;
+  }
+}
+
+// === INITIAL LOAD ===
+["accomplishmentReports", "specialOrders", "gadLaws", "dswdAgenda"].forEach(displayResources);
