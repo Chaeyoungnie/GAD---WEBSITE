@@ -6,31 +6,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 
-// Toggle showing/hiding child menus
-function toggleChildMenu(id){
-  const menu = document.getElementById(id);
-  const isVisible = menu.style.display === 'block';
-  menu.style.display = isVisible ? 'none' : 'block';
-
-  document.querySelectorAll('.parent-item').forEach(p => p.classList.remove('active'));
-  const parent = menu.previousElementSibling;
-  parent.classList.add('active');
-}
-
-// Open a tab
-function openTab(id, el=null){
-  // Hide all tabs
-  document.querySelectorAll('.tab-content').forEach(tab => tab.style.display='none');
-  // Show selected tab
-  document.getElementById(id).style.display='block';
-
-  if(el){
-    // Remove active from all child menu items
-    document.querySelectorAll('.child-menu li').forEach(c => c.classList.remove('active'));
-    // Mark the clicked child as active
-    el.classList.add('active');
-  }
-}
 
 
 /* ✅ Tab Switcher Global */
@@ -932,3 +907,203 @@ async function displayResources(type) {
 
 // === INITIAL LOAD ===
 ["accomplishmentReports", "specialOrders", "gadLaws", "dswdAgenda"].forEach(displayResources);
+
+document.getElementById('member-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Get form values
+  const name = document.getElementById('name').value;
+  const role = document.getElementById('role').value;
+  const position = document.getElementById('position').value;
+  const photo = document.getElementById('photo').files[0];
+
+  // Validate input fields
+  if (!name || !role || !position || !photo) {
+    alert('All fields are required.');
+    return;
+  }
+
+  try {
+    // Upload the photo to Cloudinary
+    const photoURL = await uploadToCloudinary(photo);
+
+    if (!photoURL) {
+      alert('Error uploading photo. Please try again.');
+      return;
+    }
+
+    // Add the new member to Firestore
+    await addDoc(collection(db, 'members'), {
+      name: name,
+      role: role,
+      position: position,
+      photoURL: photoURL,  // Cloudinary URL
+      createdAt: serverTimestamp()  // Firestore timestamp
+    });
+
+    // Clear the form
+    document.getElementById('member-form').reset();
+
+    // Success message
+    alert('New member added successfully!');
+  } catch (error) {
+    console.error('Error adding member: ', error);
+    alert('Error adding member. Please try again.');
+  }
+});
+
+
+async function displayMembers() {
+  const membersList = document.getElementById('members-list');
+
+  if (!membersList) {
+    console.error('Error: members-list element not found.');
+    return;
+  }
+
+  try {
+    // Fetch members from Firestore
+    const membersRef = collection(db, 'members');
+    const q = query(membersRef, orderBy('createdAt'));
+    const querySnapshot = await getDocs(q);
+
+    // Clear current list before displaying new data
+    membersList.innerHTML = '';
+
+    querySnapshot.forEach((docSnap) => {
+      const member = docSnap.data();
+      const memberId = docSnap.id;
+
+      const memberCard = document.createElement('div');
+      memberCard.classList.add('member-card');
+
+      memberCard.innerHTML = `
+        <img src="${member.photoURL}" alt="${member.name}'s photo" class="member-photo">
+        <div class="member-info">
+          <h4>${member.name}</h4>
+          <p><strong>Role:</strong> ${member.role}</p>
+          <p><strong>Position:</strong> ${member.position}</p>
+        </div>
+        <div class="member-actions">
+          <button onclick="editMember('${memberId}')">Edit</button>
+          <button onclick="deleteMember('${memberId}')">Delete</button>
+        </div>
+      `;
+
+      membersList.appendChild(memberCard);
+    });
+  } catch (error) {
+    console.error('Error fetching members:', error);
+  }
+}
+
+// Open Modal and Populate with Member Data
+window.editMember = async function (memberId) {
+  const memberRef = doc(db, 'members', memberId);
+
+  try {
+    // Fetch the current data of the member from Firestore
+    const memberSnap = await getDoc(memberRef);
+
+    if (!memberSnap.exists()) {
+      console.error('Member not found');
+      return;
+    }
+
+    // Get the current member data
+    const member = memberSnap.data();
+
+    // Populate the modal with the current member data
+    document.getElementById('edit-name').value = member.name;
+    document.getElementById('edit-role').value = member.role;
+    document.getElementById('edit-position').value = member.position;
+
+    // Save the memberId to the modal form for later reference when updating
+    document.getElementById('edit-member-form').dataset.memberId = memberId;
+
+    // Display the modal
+    document.getElementById('edit-member-modal').classList.add('active');
+  } catch (error) {
+    console.error('Error fetching member:', error);
+  }
+};
+
+// Close the modal when the user clicks the "X"
+document.getElementById('close-modal').addEventListener('click', function () {
+  document.getElementById('edit-member-modal').classList.remove('active');
+});
+
+// Close the modal when the user clicks outside the modal content
+window.onclick = function (event) {
+  if (event.target === document.getElementById('edit-member-modal')) {
+    document.getElementById('edit-member-modal').classList.remove('active');
+  }
+};
+
+// Handle the form submission for updating the member
+document.getElementById('edit-member-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  // Get the memberId from the form's data attribute
+  const memberId = this.dataset.memberId;
+
+  // Get the updated values from the modal form
+  const name = document.getElementById('edit-name').value;
+  const role = document.getElementById('edit-role').value;
+  const position = document.getElementById('edit-position').value;
+  const photo = document.getElementById('edit-photo').files[0];
+
+  // Reference to the member document in Firestore
+  const memberRef = doc(db, 'members', memberId);
+
+  // Fetch the existing member data from Firestore (if needed)
+  const memberSnap = await getDoc(memberRef);
+  const member = memberSnap.data();
+
+  // If a new photo is uploaded, upload it to Cloudinary
+  let photoURL = member.photoURL;
+  if (photo) {
+    photoURL = await uploadToCloudinary(photo);
+  }
+
+  // Update the member document in Firestore
+  try {
+    await updateDoc(memberRef, {
+      name: name,
+      role: role,
+      position: position,
+      photoURL: photoURL, // Updated photoURL if a new image was uploaded
+      updatedAt: serverTimestamp() // Optional: Add a timestamp for the update
+    });
+
+    // Close the modal and refresh the member list
+    document.getElementById('edit-member-modal').classList.remove('active');
+    alert('Member updated successfully!');
+    displayMembers();  // Refresh the list after the update
+  } catch (error) {
+    console.error('Error updating member:', error);
+  }
+});
+
+
+
+
+// Delete member function
+window.deleteMember = async function (memberId) {
+  const memberRef = doc(db, 'members', memberId);
+
+  try {
+    // Delete the member from Firestore
+    await deleteDoc(memberRef);
+
+    alert('Member deleted successfully!');
+    displayMembers();  // Refresh the members list
+  } catch (error) {
+    console.error('Error deleting member:', error);
+  }
+};
+
+// Call the function to display members after the DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+  displayMembers();
+});

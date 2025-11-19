@@ -20,13 +20,16 @@
       <li class="parent-item" onclick="toggleChildMenu('home-child')">🏠 Home</li>
       <ul class="child-menu" id="home-child" style="display:block">
         <li onclick="openTab('tab-banner', this)" class="active">🖼 Banner</li>
+        <li onclick="openTab('tab-documentations', this)">📁 Documentations</li>
         <li onclick="openTab('tab-theme', this)">🎨 Theme</li>
         <li onclick="openTab('tab-announcements', this)">📢 Announcements</li>
         <li onclick="openTab('tab-events', this)">📅 Events</li>
-        <li onclick="openTab('tab-documentations', this)">📁 Documentations</li>
         <li onclick="openTab('tab-calendar', this)">🗓 Calendar</li>
       </ul>
-
+      <li class="parent-item" onclick="toggleChildMenu('directory-child')"> Directory</li>
+      <ul class="child-menu" id="directory-child">
+        <li onclick="openTab('tab-directory', this)">Technical Working Group</li>
+      </ul>
       <li class="parent-item" onclick="toggleChildMenu('activities-child')">📝 Activities</li>
       <ul class="child-menu" id="activities-child">
         <li onclick="openTab('tab-activities', this)">Activities Compilation</li>
@@ -149,6 +152,77 @@
       <h2 class="list-title">Activities by Year</h2>
       <div id="activities-list"></div>
     </section>
+
+
+<section id="tab-directory" class="tab-content" style="display:none;">
+  <h1>👥 Add New Member</h1>
+
+  <div class="form-card">
+    <h3>Add New Member to Technical Working Group</h3>
+    <form id="member-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" placeholder="Enter member name" required><br>
+
+      <label for="role">Role:</label>
+      <input type="text" id="role" placeholder="Enter role" required><br>
+
+      <label for="position">Position:</label>
+      <select id="position" required>
+        <option value="Chairperson">Chairperson</option>
+        <option value="Vice-Chairperson">Vice-Chairperson</option>
+        <option value="Member">Member</option>
+        <option value="Secretary">Secretary</option>
+      </select><br>
+
+      <label for="photo">Upload Photo:</label>
+      <input type="file" id="photo" accept="image/*" required><br>
+
+      <button type="submit">Upload Member</button>
+    </form>
+  </div>
+
+  <!-- New Div for Displaying Members -->
+  <div id="members-list-container">
+    <h3>Existing Members</h3>
+    <div id="members-list">
+      <!-- Members will be displayed here -->
+    </div>
+  </div>
+</section>
+
+
+<!-- Modal for Editing -->
+<div id="edit-member-modal" class="modal">
+  <div class="modal-content">
+    <span id="close-modal" class="close">&times;</span>
+    
+    <h3>Edit Member Details</h3>
+    <form id="edit-member-form">
+      <label for="edit-name">Name:</label>
+      <input type="text" id="edit-name" required><br>
+
+      <label for="edit-role">Role:</label>
+      <input type="text" id="edit-role" required><br>
+
+      <label for="edit-position">Position:</label>
+      <select id="edit-position" required>
+        <option value="Chairperson">Chairperson</option>
+        <option value="Vice-Chairperson">Vice-Chairperson</option>
+        <option value="Member">Member</option>
+        <option value="Secretary">Secretary</option>
+      </select><br>
+
+      <label for="edit-photo">Upload Photo:</label>
+      <input type="file" id="edit-photo" accept="image/*"><br>
+
+      <button type="submit">Update Member</button>
+    </form>
+  </div>
+</div>
+
+
+
+
 
     <!-- DOCUMENTATIONS -->
     <section id="tab-documentations" class="tab-content" style="display:none;">
