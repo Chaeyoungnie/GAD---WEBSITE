@@ -752,9 +752,6 @@ body {
 
 /* === LAPTOP OPTIMIZATION (1366×768) === */
 @media (max-width: 1600px) {
-  .tab-content {
-    padding: 40px 60px;
-  }
 
   .tab-pane.active {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1196,3 +1193,143 @@ body {
   }
 }
 
+.as-sex {
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Title at top, boxes below */
+  align-items: center;     /* Centers everything horizontally */
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.as-sex h1 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.as-sex h1 span {
+  display: block;
+  font-size: 24px;
+  color: #7a0ac8;
+  margin-top: 3px;
+}
+
+.as-sex-boxes {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.male-box, .female-box {
+  background: #ffffff;
+  padding: 22px;
+  width: 48%;
+  min-width: 350px;
+  border-radius: 15px;
+  box-shadow: 0px 5px 18px rgba(0,0,0,0.1);
+}
+
+
+/* HEADER BLUE STRIP */
+.header {
+  width: 100%;
+  background: #3f51b5;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.header span {
+  float: right;
+  background: white;
+  color: #3f51b5;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* LISTS */
+.male-content,
+.female-content {
+  list-style: none;
+  text-align: left;
+  padding: 0;
+}
+
+.male-content > a,
+.female-content > a {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #555;
+  font-weight: bold;
+}
+
+/* EACH ROW */
+.male-content li,
+.female-content li {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 16px;
+  color: #333;
+  position: relative;
+}
+
+/* NUMBER (RIGHT SIDE) */
+.male-content li span,
+.female-content li span {
+  position: absolute;
+  right: 10px;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+@media (max-width: 800px) {
+  .as-sex {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .male-box, .female-box {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Loader overlay */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: none; /* hidden by default */
+}
+
+/* Spinner */
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

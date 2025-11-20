@@ -99,21 +99,25 @@ function truncateText(text, wordLimit) {
   return words.slice(0, wordLimit).join(" ") + "...";
 }
 
-// Reusable card generator with word limitation
+// Reusable card generator with cover photo and truncated description
 function createActivityCard(act) {
   const card = document.createElement("div");
   card.classList.add("activity-card");
 
-  const truncatedDescription = truncateText(act.description, 50); // limit to 20 words
+  const truncatedDescription = truncateText(act.description, 50); // limit to 50 words
+
+  // Use coverPhotoUrl first, fallback to first image in imageUrls
+  const coverImage = act.coverPhotoUrl || (act.imageUrls && act.imageUrls[0]) || "";
 
   card.innerHTML = `
-    ${act.imageUrl ? `<img src="${act.imageUrl}" alt="${act.title}" class="activity-img">` : ""}
+    ${coverImage ? `<img src="${coverImage}" alt="${act.title}" class="activity-img">` : ""}
     <div class="activity-info">
       <h3>${act.title}</h3>
       <p>${truncatedDescription}</p>
     </div>
   `;
 
+  // Redirect to activity page
   card.addEventListener("click", () => {
     window.location.href = `activity.html?id=${act.id}`;
   });
@@ -121,4 +125,5 @@ function createActivityCard(act) {
   return card;
 }
 
+// Load activities on page load
 window.addEventListener("DOMContentLoaded", loadActivities);

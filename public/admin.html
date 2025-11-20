@@ -14,17 +14,19 @@
 
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
+    <a href="home.html">
     <h2 class="sidebar-title">GAD Admin</h2>
-
+    </a>
     <ul class="parent-menu">
       <li class="parent-item" onclick="toggleChildMenu('home-child')">🏠 Home</li>
       <ul class="child-menu" id="home-child" style="display:block">
         <li onclick="openTab('tab-banner', this)" class="active">🖼 Banner</li>
+                <li onclick="openTab('tab-sex', this)">AS-SEX DISAGREGATED DATA</li>
         <li onclick="openTab('tab-documentations', this)">📁 Documentations</li>
         <li onclick="openTab('tab-theme', this)">🎨 Theme</li>
         <li onclick="openTab('tab-announcements', this)">📢 Announcements</li>
-        <li onclick="openTab('tab-events', this)">📅 Events</li>
         <li onclick="openTab('tab-calendar', this)">🗓 Calendar</li>
+        <li onclick="openTab('tab-hotlines', this)">Hotlines</li>
       </ul>
       <li class="parent-item" onclick="toggleChildMenu('directory-child')"> Directory</li>
       <ul class="child-menu" id="directory-child">
@@ -38,6 +40,10 @@
       <li class="parent-item" onclick="toggleChildMenu('resources-child')">📚 Resources</li>
       <ul class="child-menu" id="resources-child">
         <li onclick="openTab('tab-resources', this)">Resources</li>
+      </ul>
+      <li class="parent-item" onclick="toggleChildMenu('footer-child')">Footer</li>
+      <ul class="child-menu" id="footer-child">
+        <li onclick="openTab('tab-footer', this)">Footer</li>
       </ul>
     </ul>
   </aside>
@@ -68,6 +74,44 @@
     <p class="status" id="banner-status"></p>
   </div>
 </section>
+
+<div id="tab-sex" class="tab-content" style="display:none">
+
+  <h1 class="admin-section-title">AS – Sex Disaggregated Data</h1>
+
+  <div class="sex-admin-grid">
+
+    <!-- MALE EDIT FORM -->
+    <div class="sex-admin-box">
+      <h2>Male</h2>
+
+      <label>AS-OD <input id="admin-male-asod" type="number" min="0"></label>
+      <label>GSD <input id="admin-male-gsd" type="number" min="0"></label>
+      <label>PSAMD <input id="admin-male-psamd" type="number" min="0"></label>
+      <label>BGMD <input id="admin-male-bgmd" type="number" min="0"></label>
+      <label>RAMD <input id="admin-male-ramd" type="number" min="0"></label>
+      <label>PMD <input id="admin-male-pmd" type="number" min="0"></label>
+
+    </div>
+
+    <!-- FEMALE EDIT FORM -->
+    <div class="sex-admin-box">
+      <h2>Female</h2>
+
+      <label>AS-OD <input id="admin-female-asod" type="number" min="0"></label>
+      <label>GSD <input id="admin-female-gsd" type="number" min="0"></label>
+      <label>PSAMD <input id="admin-female-psamd" type="number" min="0"></label>
+      <label>BGMD <input id="admin-female-bgmd" type="number" min="0"></label>
+      <label>RAMD <input id="admin-female-ramd" type="number" min="0"></label>
+      <label>PMD <input id="admin-female-pmd" type="number" min="0"></label>
+
+    </div>
+
+  </div>
+
+  <button id="saveSexDataBtn" class="save-btn">Save Data</button>
+
+</div>
 
 
 <!-- CAMPAIGN THEME MANAGEMENT (Admin) -->
@@ -118,7 +162,7 @@
       <div id="announcements-list" class="grid-list"></div>
     </section>
 
-    <!-- EVENTS -->
+ <!--EVENTS -->
     <section id="tab-events" class="tab-content" style="display:none;">
       <h1>📅 Events</h1>
       <div class="form-card">
@@ -135,23 +179,60 @@
       <div id="events-list" class="grid-list"></div>
     </section>
 
-    <!-- ACTIVITIES -->
-    <section id="tab-activities" class="tab-content" style="display:none;">
-      <h1>📝 Activities Compilation</h1>
-      <div class="form-card">
-        <h3>Add Activity</h3>
-        <form id="activity-form">
-          <input id="activity-title" type="text" placeholder="Title">
-          <textarea id="activity-desc" placeholder="Description"></textarea>
-          <select id="activity-year"></select>
-          <input id="activity-image" type="file">
-          <button type="submit">Post</button>
-        </form>
-        <p class="status" id="activity-status"></p>
-      </div>
-      <h2 class="list-title">Activities by Year</h2>
-      <div id="activities-list"></div>
-    </section>
+    <!-- Hotlines Tab -->
+<section id="tab-hotlines" class="tab-content" style="display:none;">
+  <h1>📞 Hotlines</h1>
+
+  <!-- Hotlines Form -->
+  <div class="form-card">
+    <h3>Add Hotline</h3>
+    <form id="hotline-form">
+      <!-- New Input for Hotline Category -->
+      <input id="hotline-category" type="text" placeholder="Hotline Category (e.g. Gender-Related)" required>
+
+      <!-- Hotline Info Inputs -->
+      <input id="hotline-name" type="text" placeholder="Hotline Name" required>
+      <input id="hotline-number" type="text" placeholder="Hotline Number" required>
+      
+      <button type="submit">Add Hotline</button>
+    </form>
+    <p class="status" id="hotline-status"></p>
+  </div>
+
+  <!-- Display List of Hotlines -->
+  <h2 class="list-title">All Hotlines</h2>
+  <div id="hotlines-list" class="grid-list"></div>
+</section>
+
+
+<!-- ACTIVITIES -->
+<section id="tab-activities" class="tab-content" style="display:none;">
+  <h1>📝 Activities Compilation</h1>
+
+  <div class="form-card">
+    <h3>Add Activity</h3>
+    <form id="activity-form">
+      <input id="activity-title" type="text" placeholder="Title" required>
+      <textarea id="activity-desc" placeholder="Description" required></textarea>
+      <select id="activity-year" required></select>
+
+      <!-- Cover Photo -->
+      <label for="activity-cover-photo">Cover Photo (Required)</label>
+      <input id="activity-cover-photo" type="file" accept="image/*" required>
+
+      <!-- Multiple images -->
+      <label for="activity-image">Additional Images (Optional)</label>
+      <input id="activity-image" type="file" multiple accept="image/*">
+
+      <button type="submit">Post</button>
+    </form>
+    <p class="status" id="activity-status"></p>
+  </div>
+
+  <h2 class="list-title">Activities by Year</h2>
+  <div id="activities-list"></div>
+</section>
+
 
 
 <section id="tab-directory" class="tab-content" style="display:none;">
@@ -287,7 +368,58 @@
     <div class="resource-list" id="genderlaws-list"></div>
   </div>
 
-  <!-- ACCOMPLISHMENT REPORTS -->
+
+    <!-- DSWD AGENDA -->
+  <div class="form-card">
+    <h3>DSWD GAD Agenda</h3>
+
+    <form class="resource-form" data-type="dswdAgenda">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="dswdAgenda-list"></div>
+  </div>
+
+  <!-- SPECIAL ORDERS -->
+  <div class="form-card">
+    <h3>Special Orders</h3>
+
+    <form class="resource-form" data-type="specialOrders">
+
+      <input type="text" placeholder="Title" class="res-title">
+      <textarea placeholder="Description" class="res-desc"></textarea>
+
+      <select class="res-upload-type">
+        <option value="file">Upload File</option>
+        <option value="url">Enter URL</option>
+      </select>
+
+      <input type="file" class="res-file" accept="application/pdf,image/*">
+      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
+
+      <button type="submit">Upload</button>
+      <p class="res-status"></p>
+      <div class="res-preview" style="margin-top:10px;"></div>
+    </form>
+
+    <div class="resource-list" id="specialOrders-list"></div>
+  </div>
+
+    <!-- ACCOMPLISHMENT REPORTS -->
   <div class="form-card">
     <h3>Accomplishment Reports</h3>
 
@@ -316,82 +448,41 @@
     <div class="resource-list" id="accomplishmentReports-list"></div>
   </div>
 
-  <!-- SPECIAL ORDERS -->
-  <div class="form-card">
-    <h3>Special Orders</h3>
-
-    <form class="resource-form" data-type="specialOrders">
-
-      <input type="text" placeholder="Title" class="res-title">
-      <textarea placeholder="Description" class="res-desc"></textarea>
-
-      <select class="res-upload-type">
-        <option value="file">Upload File</option>
-        <option value="url">Enter URL</option>
-      </select>
-
-      <input type="file" class="res-file" accept="application/pdf,image/*">
-      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
-
-      <button type="submit">Upload</button>
-      <p class="res-status"></p>
-      <div class="res-preview" style="margin-top:10px;"></div>
-    </form>
-
-    <div class="resource-list" id="specialOrders-list"></div>
-  </div>
-
-  <!-- GAD NATIONAL LAWS -->
-  <div class="form-card">
-    <h3>GAD National Laws</h3>
-
-    <form class="resource-form" data-type="gadLaws">
-
-      <input type="text" placeholder="Title" class="res-title">
-      <textarea placeholder="Description" class="res-desc"></textarea>
-
-      <select class="res-upload-type">
-        <option value="file">Upload File</option>
-        <option value="url">Enter URL</option>
-      </select>
-
-      <input type="file" class="res-file" accept="application/pdf,image/*">
-      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
-
-      <button type="submit">Upload</button>
-      <p class="res-status"></p>
-      <div class="res-preview" style="margin-top:10px;"></div>
-    </form>
-
-    <div class="resource-list" id="gadLaws-list"></div>
-  </div>
-
-  <!-- DSWD AGENDA -->
-  <div class="form-card">
-    <h3>DSWD GAD Agenda</h3>
-
-    <form class="resource-form" data-type="dswdAgenda">
-
-      <input type="text" placeholder="Title" class="res-title">
-      <textarea placeholder="Description" class="res-desc"></textarea>
-
-      <select class="res-upload-type">
-        <option value="file">Upload File</option>
-        <option value="url">Enter URL</option>
-      </select>
-
-      <input type="file" class="res-file" accept="application/pdf,image/*">
-      <input type="text" class="res-url" placeholder="Paste URL Here" style="display:none;">
-
-      <button type="submit">Upload</button>
-      <p class="res-status"></p>
-      <div class="res-preview" style="margin-top:10px;"></div>
-    </form>
-
-    <div class="resource-list" id="dswdAgenda-list"></div>
-  </div>
-
 </section>
+
+<!-- ============ EDITABLE FOOTER ============ -->
+<section id="tab-footer" class="tab-content" style="display:none;">
+  <h1>📌 Edit Footer Information</h1>
+
+  <div class="form-card">
+    <h3>Edit Footer Details</h3>
+
+    <!-- Editable footer sections -->
+    <div class="editable-item" contenteditable="true" id="editable-footer-address">
+      DSWD Central Office, IBP Road, Batasan Pambansang Complex, Constitution Hills, Quezon City, Philippines, 1126
+    </div>
+
+    <div class="editable-item" contenteditable="true" id="editable-footer-phone">
+      Tel. Nos.: 06123456 Local VoIP: 10130
+    </div>
+
+    <div class="editable-item" contenteditable="true" id="editable-footer-email">
+      info@dswd.gov.ph
+    </div>
+
+    <!-- Save Button -->
+    <button id="save-footer" class="submit-btn">💾 Save Footer Changes</button>
+  </div>
+
+  <!-- Display the saved footer content -->
+  <div id="footer-display" style="margin-top: 20px;">
+    <h4>Saved Footer Content:</h4>
+    <p><strong>Address:</strong> <span id="saved-footer-address"></span></p>
+    <p><strong>Phone:</strong> <span id="saved-footer-phone"></span></p>
+    <p><strong>Email:</strong> <span id="saved-footer-email"></span></p>
+  </div>
+</section>
+
 
 
   </main>
@@ -399,5 +490,8 @@
 </div>
 
 <script type="module" src="script/admin.js"></script>
+<script type="module" src="script/firebase.js"></script>
+
+
 </body>
 </html>

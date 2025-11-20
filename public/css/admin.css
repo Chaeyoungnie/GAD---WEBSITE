@@ -29,6 +29,10 @@ body {
   padding: 20px;
 }
 
+.sidebar a{
+  color: white;
+}
+
 .sidebar-title {
   font-size: 1.5em;
   margin-bottom: 20px;
@@ -340,4 +344,161 @@ form button:hover, .btn:hover {
 
 .close:hover {
   color: red;
+}
+
+
+/* Editable Footer Styles */
+#tab-footer {
+  background-color: #f4f4f4;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.editable-item {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 50px;
+  font-size: 14px;
+  color: #333;
+}
+
+.editable-item:empty:before {
+  content: "Click here to edit...";
+  color: #bbb;
+}
+
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+#footer-display {
+  font-size: 14px;
+  color: #555;
+}
+
+/* General Button Style */
+button {
+  padding: 12px 20px;           /* Comfortable padding */
+  font-size: 1rem;              /* Slightly larger text */
+  border: none;                 /* Remove default border */
+  border-radius: 8px;           /* Soft rounded corners */
+  cursor: pointer;             /* Pointer cursor to indicate clickability */
+  transition: all 0.3s ease;    /* Smooth transitions for all properties */
+  text-align: center;           /* Center text inside button */
+  font-weight: bold;            /* Make the button text bold */
+  text-transform: uppercase;    /* Uppercase text for impact */
+}
+
+/* Default Button State */
+button {
+  background-color: #3b86ff;    /* Modern blue background */
+  color: white;                 /* White text */
+}
+
+button:hover {
+  background-color: #2f6fd7;    /* Darker blue on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+}
+
+button:focus {
+  outline: none;                /* Remove default focus outline */
+  border: 2px solid #3b86ff;    /* Blue border when focused */
+}
+
+button:active {
+  background-color: #2b5c9a;    /* Darker blue when clicked */
+  transform: scale(0.98);        /* Slightly shrink on click for effect */
+}
+
+/* Specific Button Styles */
+button.edit-btn {
+  background-color: #4caf50;    /* Green background for "Edit" */
+  color: white;
+}
+
+button.edit-btn:hover {
+  background-color: #45a049;    /* Darker green on hover */
+}
+
+button.delete-btn {
+  background-color: #e53935;    /* Red background for "Delete" */
+  color: white;
+}
+
+button.delete-btn:hover {
+  background-color: #d32f2f;    /* Darker red on hover */
+}
+
+/* ADMIN SEX PANEL */
+.sex-admin-grid {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.sex-admin-box {
+  flex: 1;
+  min-width: 280px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #d1d1d1;
+  box-shadow: 0px 2px 4px #00000015;
+}
+
+.sex-admin-box h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  border-bottom: 2px solid #4285f4;
+  padding-bottom: 5px;
+}
+
+.sex-admin-box label {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.sex-admin-box input {
+  width: 100px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  border: 1px solid #999;
+}
+
+.save-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #4285f4;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #3367d6;
+}
+
+/* RESPONSIVE */
+@media(max-width: 700px){
+  .sex-admin-grid {
+    flex-direction: column;
+  }
 }

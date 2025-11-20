@@ -2,10 +2,8 @@ import { db, uploadToCloudinary } from "./firebase.js";
 import {
   collection, addDoc, serverTimestamp,
   query, where, orderBy, getDocs, doc, updateDoc, deleteDoc,
-  getDoc, setDoc
+  getDoc, setDoc,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-
 
 
 /* ✅ Tab Switcher Global */
@@ -162,29 +160,41 @@ async function deletePost({ id, type, container }) {
   }
 }
 
-/* ✅ Activities Section */
 async function postActivity() {
   const title = document.getElementById("activity-title").value.trim();
   const description = document.getElementById("activity-desc").value.trim();
   const year = document.getElementById("activity-year").value;
-  const file = document.getElementById("activity-image")?.files?.[0];
+  const coverFile = document.getElementById("activity-cover-photo")?.files?.[0];
+  const files = document.getElementById("activity-image")?.files;
   const status = document.getElementById("activity-status");
 
-  if (!title || !description || !year) {
-    status.textContent = "⚠️ Fill all fields including year.";
+  if (!title || !description || !year || !coverFile) {
+    status.textContent = "⚠️ Fill all fields including year and cover photo.";
     return;
   }
 
   status.textContent = "Uploading...";
 
   try {
-    const imageUrl = file ? await uploadToCloudinary(file) : "";
+    // Upload cover photo
+    const coverPhotoUrl = await uploadToCloudinary(coverFile);
 
+    // Upload multiple images for compilation
+    let imageUrls = [];
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const url = await uploadToCloudinary(file);
+        imageUrls.push(url);
+      }
+    }
+
+    // Save to Firestore
     await addDoc(collection(db, "activities"), {
       title,
       description,
-      imageUrl,
       year,
+      coverPhotoUrl,   // single cover photo url
+      imageUrls,       // multiple images urls array
       createdAt: serverTimestamp()
     });
 
@@ -196,6 +206,7 @@ async function postActivity() {
     status.textContent = "❌ Error posting activity.";
   }
 }
+
 
 // ✅ Dynamically populate year options from 2022 up to current year + 2
 function populateYearDropdown() {
@@ -253,20 +264,26 @@ async function displayActivities() {
     yearSection.style.display = "none";
 
     // Activities under this year
-    grouped[year].forEach(act => {
-      const card = document.createElement("div");
-      card.classList.add("post-card");
-      card.innerHTML = `
-        ${act.imageUrl ? `<img src="${act.imageUrl}" class="post-img">` : ""}
-        <h4>${act.title}</h4>
-        <p>${act.description}</p>
-        <div class="actions">
-          <button class="edit-activity-btn" data-id="${act.id}">Edit</button>
-          <button class="delete-activity-btn" data-id="${act.id}">Delete</button>
-        </div>
-      `;
-      yearSection.appendChild(card);
-    });
+grouped[year].forEach(act => {
+  const card = document.createElement("div");
+  card.classList.add("post-card");
+  card.innerHTML = `
+    ${act.coverPhotoUrl
+      ? `<img src="${act.coverPhotoUrl}" class="post-img">`
+      : (act.imageUrls && act.imageUrls.length > 0
+          ? `<img src="${act.imageUrls[0]}" class="post-img">`
+          : "")
+    }
+    <h4>${act.title}</h4>
+    <p>${act.description}</p>
+    <div class="actions">
+      <button class="edit-activity-btn" data-id="${act.id}">Edit</button>
+      <button class="delete-activity-btn" data-id="${act.id}">Delete</button>
+    </div>
+  `;
+  yearSection.appendChild(card);
+});
+
 
     // Toggle visibility
     yearButton.addEventListener("click", () => {
@@ -289,36 +306,58 @@ async function displayActivities() {
 }
 
 
-/* ✅ Edit Activity */
+
 async function enterEditActivity(id) {
   const container = document.getElementById("activities-list");
   const card = Array.from(container.querySelectorAll(".post-card"))
     .find(card => card.querySelector(`[data-id="${id}"]`));
   if (!card) return;
 
-  const titleEl = card.querySelector("h4");
-  const descEl = card.querySelector("p");
-  const imgEl = card.querySelector("img");
-  const oldTitle = titleEl.textContent;
-  const oldDesc = descEl.textContent;
-  const oldImage = imgEl ? imgEl.src : "";
+  const data = await getDoc(doc(db, "activities", id));
+  const act = data.data();
+
+  const oldImages = act.imageUrls || [];
+  const oldCover = act.coverPhotoUrl || "";
 
   card.innerHTML = `
-    <input type="text" id="edit-act-title-${id}" value="${oldTitle}" style="width:100%;margin-bottom:5px;">
-    <textarea id="edit-act-desc-${id}" style="width:100%;height:80px;">${oldDesc}</textarea>
-    <p style="margin-top:5px;">Current Image:</p>
-    ${oldImage ? `<img src="${oldImage}" style="width:100%;border-radius:6px;margin-bottom:5px;">` : "<p>No image</p>"}
-    <input type="file" id="edit-act-img-${id}" accept="image/*">
-    <div style="margin-top:8px;">
-      <button class="save-btn">💾 Save</button>
-      <button class="cancel-btn">❌ Cancel</button>
+    <div class="edit-activity-form" style="padding:15px; border:1px solid #ccc; border-radius:8px; background:#f9f9f9;">
+      <h3 style="margin-bottom:10px;">Edit Activity</h3>
+      
+      <label for="edit-act-title-${id}">Title</label>
+      <input type="text" id="edit-act-title-${id}" value="${act.title}" style="width:100%; margin-bottom:10px; padding:6px; border-radius:4px; border:1px solid #ccc;">
+
+      <label for="edit-act-desc-${id}">Description</label>
+      <textarea id="edit-act-desc-${id}" style="width:100%; height:80px; padding:6px; border-radius:4px; border:1px solid #ccc; margin-bottom:10px;">${act.description}</textarea>
+
+      <div style="margin-bottom:10px;">
+        <strong>Current Cover Photo:</strong>
+        ${oldCover ? `<img src="${oldCover}" style="width:100%; max-height:200px; object-fit:cover; border-radius:6px; margin-top:5px;">` : "<p>No cover photo</p>"}
+        <input type="file" id="edit-act-cover-img-${id}" accept="image/*" style="margin-top:5px;">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <strong>Current Images:</strong>
+        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+          ${oldImages.length
+            ? oldImages.map(url => `<img src="${url}" style="width:80px; height:80px; object-fit:cover; border-radius:4px;">`).join("")
+            : "<p>No additional images</p>"
+          }
+        </div>
+        <input type="file" id="edit-act-img-${id}" multiple style="margin-top:5px;">
+      </div>
+
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <button class="save-btn" style="flex:1; padding:8px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">💾 Save</button>
+        <button class="cancel-btn" style="flex:1; padding:8px; background:#f44336; color:white; border:none; border-radius:5px; cursor:pointer;">❌ Cancel</button>
+      </div>
     </div>
   `;
 
   card.querySelector(".save-btn").addEventListener("click", async () => {
     const newTitle = document.getElementById(`edit-act-title-${id}`).value.trim();
     const newDesc = document.getElementById(`edit-act-desc-${id}`).value.trim();
-    const newFile = document.getElementById(`edit-act-img-${id}`).files[0];
+    const newCoverFile = document.getElementById(`edit-act-cover-img-${id}`).files[0];
+    const newFiles = document.getElementById(`edit-act-img-${id}`).files;
 
     if (!newTitle || !newDesc) {
       alert("Please fill all fields.");
@@ -326,16 +365,24 @@ async function enterEditActivity(id) {
     }
 
     try {
-      let imageUrl = oldImage;
-      if (newFile) {
-        imageUrl = await uploadToCloudinary(newFile);
+      let coverPhotoUrl = oldCover;
+      if (newCoverFile) coverPhotoUrl = await uploadToCloudinary(newCoverFile);
+
+      let newImageUrls = [...oldImages];
+      if (newFiles && newFiles.length > 0) {
+        for (const file of newFiles) {
+          const url = await uploadToCloudinary(file);
+          newImageUrls.push(url);
+        }
       }
 
       await updateDoc(doc(db, "activities", id), {
         title: newTitle,
         description: newDesc,
-        imageUrl
+        coverPhotoUrl,
+        imageUrls: newImageUrls
       });
+
       displayActivities();
     } catch (err) {
       console.error(err);
@@ -345,6 +392,7 @@ async function enterEditActivity(id) {
 
   card.querySelector(".cancel-btn").addEventListener("click", displayActivities);
 }
+
 
 /* ✅ Delete Activity */
 async function deleteActivity(id) {
@@ -1129,4 +1177,292 @@ window.deleteMember = async function (memberId) {
 // Call the function to display members after the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
   displayMembers();
+});
+// Function to save a new hotline to Firestore
+async function saveHotlineToFirestore(category, name, number) {
+  try {
+    // Add a new hotline document under the 'hotlines' collection
+    await addDoc(collection(db, "hotlines"), {
+      category: category,
+      name: name,
+      number: number,
+      createdAt: serverTimestamp()  // Automatically adds timestamp
+    });
+
+    document.getElementById("hotline-status").textContent = "Hotline added successfully!";
+    fetchHotlines(); // Refresh the hotlines list
+    document.getElementById("hotline-form").reset(); // Reset the form
+  } catch (error) {
+    document.getElementById("hotline-status").textContent = "Error adding hotline: " + error.message;
+  }
+}
+
+// Function to fetch and display hotlines from Firestore
+async function fetchHotlines() {
+  const hotlinesList = document.getElementById("hotlines-list");
+  if (!hotlinesList) return;
+
+  hotlinesList.innerHTML = ""; // Clear existing hotlines
+
+  try {
+    // Get all documents from the 'hotlines' collection
+    const q = query(collection(db, "hotlines"), orderBy("category"));
+    const snapshot = await getDocs(q);
+
+    // Group hotlines by category
+    const categorizedHotlines = {};
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const category = data.category;
+      const hotlineId = doc.id;
+
+      if (!categorizedHotlines[category]) {
+        categorizedHotlines[category] = [];
+      }
+
+      categorizedHotlines[category].push({
+        id: hotlineId,
+        name: data.name,
+        number: data.number
+      });
+    });
+
+    // Render hotlines grouped by category
+    Object.keys(categorizedHotlines).forEach(category => {
+      const card = document.createElement("div");
+      card.classList.add("hotline-card");
+
+      let html = `<h3>${category}</h3><ul>`;
+      categorizedHotlines[category].forEach(item => {
+        html += `
+          <li>
+            <strong>${item.name}:</strong> ${item.number}
+            <button class="edit-btn" data-id="${item.id}">Edit</button>
+            <button class="delete-btn" data-id="${item.id}">Delete</button>
+          </li>
+        `;
+      });
+      html += `</ul>`;
+
+      card.innerHTML = html;
+      hotlinesList.appendChild(card);
+    });
+
+    // Attach event listeners to Edit and Delete buttons
+    document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const hotlineId = e.target.getAttribute('data-id');
+        const listItem = e.target.closest('li');
+        const name = listItem.querySelector('strong').textContent.replace(':', '').trim();
+        const number = listItem.childNodes[1].textContent.trim();
+        editHotlineForm(hotlineId, name, number);
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const hotlineId = e.target.getAttribute('data-id');
+        deleteHotline(hotlineId);
+      });
+    });
+
+  } catch (error) {
+    console.error("Error fetching hotlines: ", error);
+    hotlinesList.innerHTML = "Error fetching hotlines.";
+  }
+}
+
+// Function to handle editing a hotline
+function editHotlineForm(hotlineId, name, number) {
+  // Prefill the form with existing values
+  document.getElementById("hotline-name").value = name;
+  document.getElementById("hotline-number").value = number;
+
+  // Create a new Save Changes button
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save Changes";
+  saveButton.onclick = () => updateHotline(hotlineId);
+
+  // Remove the previous Save button if it exists
+  const existingSaveButton = document.querySelector("#hotline-form button");
+  if (existingSaveButton) {
+    existingSaveButton.remove();
+  }
+
+  // Append the Save Changes button to the form
+  document.getElementById("hotline-form").appendChild(saveButton);
+}
+
+// Function to update a hotline in Firestore
+async function updateHotline(hotlineId) {
+  const category = document.getElementById("hotline-category").value;
+  const name = document.getElementById("hotline-name").value;
+  const number = document.getElementById("hotline-number").value;
+
+  if (category && name && number) {
+    try {
+      const hotlineRef = doc(db, "hotlines", hotlineId);
+      await updateDoc(hotlineRef, {
+        category: category,
+        name: name,
+        number: number
+      });
+
+      alert("Hotline updated successfully!");
+      fetchHotlines();
+      document.getElementById("hotline-form").reset();
+    } catch (error) {
+      console.error("Error updating hotline:", error);
+    }
+  } else {
+    alert("Please fill in all fields before saving.");
+  }
+}
+
+// Function to delete a hotline from Firestore
+async function deleteHotline(hotlineId) {
+  const hotlineRef = doc(db, "hotlines", hotlineId);
+  try {
+    await deleteDoc(hotlineRef);  // Delete the document
+    fetchHotlines(); // Refresh the list after deletion
+    alert("Hotline deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting hotline:", error);
+  }
+}
+
+// Fetch and display hotlines on page load
+window.onload = function () {
+  fetchHotlines();
+};
+
+// Event listener for the hotline form submission
+document.getElementById("hotline-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const category = document.getElementById("hotline-category").value;
+  const name = document.getElementById("hotline-name").value;
+  const number = document.getElementById("hotline-number").value;
+
+  if (category && name && number) {
+    saveHotlineToFirestore(category, name, number);
+  } else {
+    document.getElementById("hotline-status").textContent = "Please fill in all fields.";
+  }
+});
+
+
+
+// Function to fetch footer data from Firestore
+async function fetchFooterData() {
+  const footerDocRef = doc(db, "footer", "footer_data");  // Assuming 'footer_data' is the document ID
+  const footerDoc = await getDoc(footerDocRef);
+
+  if (footerDoc.exists()) {
+    const data = footerDoc.data();
+    // Display the footer data
+    document.getElementById('editable-footer-address').innerText = data.address || "No address set.";
+    document.getElementById('editable-footer-phone').innerText = data.phone || "No phone set.";
+    document.getElementById('editable-footer-email').innerText = data.email || "No email set.";
+    
+    // Display the saved footer content
+    document.getElementById('saved-footer-address').innerText = data.address || "No address set.";
+    document.getElementById('saved-footer-phone').innerText = data.phone || "No phone set.";
+    document.getElementById('saved-footer-email').innerText = data.email || "No email set.";
+  } else {
+    console.log("No footer data found.");
+  }
+}
+
+// Function to update footer data in Firestore
+async function updateFooterData(address, phone, email) {
+  const footerDocRef = doc(db, "footer", "footer_data");  // Same document ID
+  await setDoc(footerDocRef, {
+    address: address,
+    phone: phone,
+    email: email
+  });
+
+  alert("Footer details updated successfully!");
+}
+
+// Call fetchFooterData when the page loads to populate the footer
+window.addEventListener('DOMContentLoaded', fetchFooterData);
+
+// Handle Save Button Click
+document.getElementById('save-footer').addEventListener('click', () => {
+  // Get current content from the editable footer sections
+  const address = document.getElementById('editable-footer-address').innerText.trim();
+  const phone = document.getElementById('editable-footer-phone').innerText.trim();
+  const email = document.getElementById('editable-footer-email').innerText.trim();
+
+  // Update the footer in Firestore with the new content
+  updateFooterData(address, phone, email);
+
+  // Optionally: Immediately update the saved content display
+  document.getElementById('saved-footer-address').innerText = address;
+  document.getElementById('saved-footer-phone').innerText = phone;
+  document.getElementById('saved-footer-email').innerText = email;
+});
+
+
+/* ---------------------------
+   LOAD EXISTING DATA INTO FORM
+---------------------------- */
+async function loadSexDataAdmin() {
+  const ref = doc(db, "home", "sexData");
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  // Male fields
+  document.getElementById("admin-male-asod").value = data.male.asod;
+  document.getElementById("admin-male-gsd").value = data.male.gsd;
+  document.getElementById("admin-male-psamd").value = data.male.psamd;
+  document.getElementById("admin-male-bgmd").value = data.male.bgmd;
+  document.getElementById("admin-male-ramd").value = data.male.ramd;
+  document.getElementById("admin-male-pmd").value = data.male.pmd;
+
+  // Female fields
+  document.getElementById("admin-female-asod").value = data.female.asod;
+  document.getElementById("admin-female-gsd").value = data.female.gsd;
+  document.getElementById("admin-female-psamd").value = data.female.psamd;
+  document.getElementById("admin-female-bgmd").value = data.female.bgmd;
+  document.getElementById("admin-female-ramd").value = data.female.ramd;
+  document.getElementById("admin-female-pmd").value = data.female.pmd;
+}
+
+loadSexDataAdmin();
+
+
+/* ---------------------------
+   SAVE DATA
+---------------------------- */
+document.getElementById("saveSexDataBtn").addEventListener("click", async () => {
+
+  const sexData = {
+    male: {
+      asod: Number(document.getElementById("admin-male-asod").value),
+      gsd: Number(document.getElementById("admin-male-gsd").value),
+      psamd: Number(document.getElementById("admin-male-psamd").value),
+      bgmd: Number(document.getElementById("admin-male-bgmd").value),
+      ramd: Number(document.getElementById("admin-male-ramd").value),
+      pmd: Number(document.getElementById("admin-male-pmd").value)
+    },
+    female: {
+      asod: Number(document.getElementById("admin-female-asod").value),
+      gsd: Number(document.getElementById("admin-female-gsd").value),
+      psamd: Number(document.getElementById("admin-female-psamd").value),
+      bgmd: Number(document.getElementById("admin-female-bgmd").value),
+      ramd: Number(document.getElementById("admin-female-ramd").value),
+      pmd: Number(document.getElementById("admin-female-pmd").value)
+    }
+  };
+
+  await setDoc(doc(db, "home", "sexData"), sexData);
+
+  alert("Sex Disaggregated Data Saved!");
 });

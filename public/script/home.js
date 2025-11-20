@@ -1,3 +1,25 @@
+// Create loader dynamically
+const loader = document.createElement('div');
+loader.id = 'loader';
+loader.className = 'loader-overlay';
+loader.innerHTML = '<div class="spinner"></div>';
+document.body.appendChild(loader);
+
+// Reference to your content container
+const content = document.getElementById('content'); // make sure your content container exists
+
+// Show/hide functions
+function showLoader() {
+  loader.style.display = 'flex';
+  if(content) content.style.display = 'none';
+}
+
+function hideLoader() {
+  loader.style.display = 'none';
+  if(content) content.style.display = 'block';
+}
+
+
 import { db } from "./firebase.js";
 import { 
   collection, query, orderBy, onSnapshot, doc, getDoc, where, limit, getDocs 
@@ -89,7 +111,6 @@ async function loadResource(type, containerId) {
     container.innerHTML = ""; // clear old content
 
     if (snap.empty) {
-      container.innerHTML = `<p>No resources found for ${type}.</p>`;
       return;
     }
 
@@ -222,32 +243,47 @@ function initSlider() {
   updateSlides();
 }
 
-/* -----------------------------
-   Hotlines
------------------------------- */
-function fetchHotlines() {
-  const hotlinesContainer = document.getElementById("hotlines");
+// Function to fetch and display hotlines from Firestore
+async function fetchHotlines() {
+  const hotlinesContainer = document.querySelector("#hotlines .hotline-container");
   if (!hotlinesContainer) return;
 
-  hotlinesContainer.innerHTML = `<div class="hotline-container"></div>`;
-  const container = hotlinesContainer.querySelector(".hotline-container");
+  hotlinesContainer.innerHTML = ""; // Clear any existing hotlines
 
-  const hotlineData = [
-    { title: "Gender-Related Hotlines", list: [{ name: "PCW", number: "0919-333-4455" }, { name: "DSWD Women’s Desk", number: "(02) 931-8101" }, { name: "PNP Women & Children", number: "(02) 8536-6532" }]},
-    { title: "PWD Assistance", list: [{ name: "NCDA", number: "(02) 932-6422" }, { name: "DOH Disability Unit", number: "(02) 651-7800" }]},
-    { title: "General Concerns", list: [{ name: "Emergency", number: "911" }, { name: "DOH COVID-19", number: "1555" }, { name: "DSWD Hotline", number: "8888" }]}
-  ];
+  try {
+    // Query to fetch hotlines from Firestore, ordered by category
+    const q = query(collection(db, "hotlines"), orderBy("category"));
+    const snapshot = await getDocs(q);
 
-  hotlineData.forEach(h => {
-    const card = document.createElement("div");
-    card.classList.add("hotline-card");
-    let html = `<h3>${h.title}</h3><ul>`;
-    h.list.forEach(item => html += `<li><strong>${item.name}:</strong> ${item.number}</li>`);
-    html += `</ul>`;
-    card.innerHTML = html;
-    container.appendChild(card);
-  });
+    // Iterate through the documents and add them to the container
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const hotlineCard = document.createElement("div");
+      hotlineCard.classList.add("hotline-card");
+
+      // Create the HTML structure for each hotline
+      hotlineCard.innerHTML = `
+        <h3>${data.category}</h3>
+        <ul>
+          <li>
+            <strong>${data.name}:</strong> ${data.number}
+          </li>
+        </ul>
+      `;
+
+      // Append the hotline card to the container
+      hotlinesContainer.appendChild(hotlineCard);
+    });
+  } catch (error) {
+    console.error("Error fetching hotlines: ", error);
+    hotlinesContainer.innerHTML = "Error fetching hotlines.";
+  }
 }
+
+// Fetch hotlines when the page loads
+window.onload = function() {
+  fetchHotlines();  // Call the fetchHotlines function on page load
+};
 
 /* -----------------------------
    Calendar
@@ -384,3 +420,122 @@ tabButtons.forEach(button => {
     document.getElementById(button.dataset.tab)?.classList.add("active");
   });
 });
+
+
+// Function to fetch footer data from Firestore
+async function fetchFooterData() {
+  // Reference to the Firestore document where footer data is stored
+  const footerDocRef = doc(db, "footer", "footer_data");  // Collection "footer", Document "footer_data"
+  
+  try {
+    const footerDoc = await getDoc(footerDocRef);
+
+    if (footerDoc.exists()) {
+      const data = footerDoc.data();
+      
+      // Update the footer display elements with the fetched data
+      document.getElementById('display-address').innerHTML = data.address || "No address set.";
+      document.getElementById('display-contact').innerHTML = `
+        Tel. Nos.: <strong>${data.phone}</strong><br>
+        Email: <a href="mailto:${data.email}">${data.email}</a>
+      `;
+      
+      // Optionally update the map iframe URL if it's part of the data
+      if (data.mapUrl) {
+        document.getElementById('footer-map').src = data.mapUrl;
+      }
+    } else {
+      console.log("No footer data found.");
+    }
+  } catch (error) {
+    console.error("Error fetching footer data:", error);
+  }
+}
+
+// Call fetchFooterData when the page loads to populate the footer
+window.addEventListener('DOMContentLoaded', fetchFooterData);
+
+
+const maleTotal = document.getElementById("male-total");
+const femaleTotal = document.getElementById("female-total");
+
+// Division values (male)
+const maleASOD = document.getElementById("male-asod");
+const maleGSD = document.getElementById("male-gsd");
+const malePSAMD = document.getElementById("male-psamd");
+const maleBGMD = document.getElementById("male-bgmd");
+const maleRAMD = document.getElementById("male-ramd");
+const malePMD = document.getElementById("male-pmd");
+
+// Division values (female)
+const femaleASOD = document.getElementById("female-asod");
+const femaleGSD = document.getElementById("female-gsd");
+const femalePSAMD = document.getElementById("female-psamd");
+const femaleBGMD = document.getElementById("female-bgmd");
+const femaleRAMD = document.getElementById("female-ramd");
+const femalePMD = document.getElementById("female-pmd");
+
+/* LIVE FETCH USING onSnapshot */
+onSnapshot(doc(db, "home", "sexData"), (snap) => {
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  // ---- MALE ----
+  maleASOD.textContent = data.male.asod;
+  maleGSD.textContent = data.male.gsd;
+  malePSAMD.textContent = data.male.psamd;
+  maleBGMD.textContent = data.male.bgmd;
+  maleRAMD.textContent = data.male.ramd;
+  malePMD.textContent = data.male.pmd;
+
+  const totalMale =
+    data.male.asod +
+    data.male.gsd +
+    data.male.psamd +
+    data.male.bgmd +
+    data.male.ramd +
+    data.male.pmd;
+
+  maleTotal.textContent = totalMale;
+
+  // ---- FEMALE ----
+  femaleASOD.textContent = data.female.asod;
+  femaleGSD.textContent = data.female.gsd;
+  femalePSAMD.textContent = data.female.psamd;
+  femaleBGMD.textContent = data.female.bgmd;
+  femaleRAMD.textContent = data.female.ramd;
+  femalePMD.textContent = data.female.pmd;
+
+  const totalFemale =
+    data.female.asod +
+    data.female.gsd +
+    data.female.psamd +
+    data.female.bgmd +
+    data.female.ramd +
+    data.female.pmd;
+
+  femaleTotal.textContent = totalFemale;
+});
+
+async function loadData() {
+  try {
+    showLoader();
+
+    const querySnapshot = await getDocs(collection(db, "your-collection-name"));
+    if(content) content.innerHTML = ''; // clear existing content
+    querySnapshot.forEach((doc) => {
+      const div = document.createElement('div');
+      div.textContent = JSON.stringify(doc.data());
+      content.appendChild(div);
+    });
+
+    hideLoader();
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    hideLoader();
+  }
+}
+
+// Call the function
+loadData();

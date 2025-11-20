@@ -60,13 +60,15 @@ function showActivitiesForYear(year, btn) {
   const activities = groupedActivities[year];
   yearActivityContainer.innerHTML = "";
 
-  
-
   activities.forEach(act => {
     const card = document.createElement("div");
     card.classList.add("activity-card");
+
+    // Use coverPhotoUrl if available
+    const coverImage = act.coverPhotoUrl || (act.imageUrls && act.imageUrls[0]) || "";
+
     card.innerHTML = `
-      ${act.imageUrl ? `<img src="${act.imageUrl}" alt="${act.title}" class="activity-img">` : ""}
+      ${coverImage ? `<img src="${coverImage}" alt="${act.title}" class="activity-img">` : ""}
       <div class="activity-info">
         <h3>${act.title}</h3>
         <p>${act.description}</p>
@@ -83,3 +85,4 @@ function showActivitiesForYear(year, btn) {
 }
 
 window.addEventListener("DOMContentLoaded", loadActivities);
+
