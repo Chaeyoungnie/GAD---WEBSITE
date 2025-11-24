@@ -1,9 +1,38 @@
-import { db, uploadToCloudinary } from "./firebase.js";
+import { db, auth, uploadToCloudinary } from "./firebase.js";
+
 import {
   collection, addDoc, serverTimestamp,
-  query, where, orderBy, getDocs, doc, updateDoc, deleteDoc,
-  getDoc, setDoc,
+  query, where, orderBy, getDocs, doc,
+  updateDoc, deleteDoc, getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const ADMIN_EMAIL = "gad-admin@gad-email.com";
+
+// 🔐 Admin page protection
+onAuthStateChanged(auth, (user) => {
+  console.log("Auth State Changed. User:", user);
+
+  if (!user) {
+    console.log("No user logged in → redirecting");
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (user.email !== ADMIN_EMAIL) {
+    console.log("User not admin → signing out");
+    signOut(auth);
+    window.location.href = "login.html";
+    return;
+  }
+
+  console.log("Admin verified → access granted");
+});
+
 
 
 /* ✅ Tab Switcher Global */
@@ -1465,4 +1494,11 @@ document.getElementById("saveSexDataBtn").addEventListener("click", async () => 
   await setDoc(doc(db, "home", "sexData"), sexData);
 
   alert("Sex Disaggregated Data Saved!");
+});
+
+const hamburger = document.getElementById('hamburger-btn');
+const sidebar = document.querySelector('.sidebar');
+
+hamburger.addEventListener('click', () => {
+  sidebar.classList.toggle('show');
 });

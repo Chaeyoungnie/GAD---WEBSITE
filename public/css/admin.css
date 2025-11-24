@@ -502,3 +502,111 @@ button.delete-btn:hover {
     flex-direction: column;
   }
 }
+
+
+/* ================= MOBILE ADJUSTMENTS ================= */
+@media (max-width: 768px) {
+  /* Sidebar becomes top bar */
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    overflow-x: auto;
+  }
+
+  .parent-item {
+    flex: 0 0 auto;
+    min-width: 120px;
+  }
+
+  .child-menu {
+    position: relative;
+    left: 0;
+    display: none; /* Hide submenus by default */
+  }
+
+  .child-menu.show {
+    display: block;
+  }
+
+  .main {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* Grids become 1 column */
+  .grid-list, .docs-grid, .sex-admin-grid {
+    grid-template-columns: 1fr !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .member-card, .sex-admin-box {
+    width: 100% !important;
+  }
+
+  /* Make forms fill width */
+  #member-form input, #member-form select, .form-card input, .form-card select, .form-card textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  /* Buttons scale up for touch */
+  button {
+    padding: 14px 18px;
+    font-size: 16px;
+  }
+
+  /* Footer editable items full width */
+  #tab-footer, .editable-item {
+    width: 100%;
+  }
+}
+
+/* Hamburger Button */
+.hamburger-btn {
+  display: none;               /* Hidden on desktop */
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1100;
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* Mobile adjustments */
+@media(max-width: 768px){
+  .hamburger-btn {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;             /* Hidden by default */
+    height: 100%;
+    width: var(--sidebar-w);
+    z-index: 1050;
+    background-color: var(--accent-dark);
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.show {
+    left: 0;                  /* Slide in */
+  }
+
+  .main {
+    padding: 70px 12px 12px 12px; /* Leave space for hamburger */
+  }
+}

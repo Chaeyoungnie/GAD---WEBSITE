@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Admin Panel</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  body {
+    background: #f5f6fa;
+    color: #333;
+  }
+
+  /* Top header */
+  header {
+    background: #2f80ed;
+    color: #fff;
+    padding: 16px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* Bottom navigation */
+  nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background: #fff;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  }
+  nav a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+  }
+  nav a.active {
+    color: #2f80ed;
+    font-weight: bold;
+  }
+
+  /* Container */
+  .container {
+    padding: 16px;
+    padding-bottom: 70px; /* space for nav */
+  }
+
+  /* Dashboard cards */
+  .cards {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  .card {
+    background: #fff;
+    min-width: 120px;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .card h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .card p {
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* User list */
+  .user-list {
+    margin-top: 16px;
+  }
+  .user-card {
+    background: #fff;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .user-info span {
+    font-size: 14px;
+  }
+  .user-actions button {
+    background: #2f80ed;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* Form */
+  .form-container {
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-top: 16px;
+  }
+  .form-container label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .form-container input,
+  .form-container select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .form-container button {
+    width: 100%;
+    padding: 12px;
+    background: #2f80ed;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Scrollbar for cards */
+  .cards::-webkit-scrollbar {
+    height: 6px;
+  }
+  .cards::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+  }
+
+</style>
+</head>
+<body>
+
+<header>Admin Panel</header>
+
+<div class="container">
+
+  <!-- Dashboard -->
+  <h2>Dashboard</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>120</h3>
+      <p>Users</p>
+    </div>
+    <div class="card">
+      <h3>45</h3>
+      <p>Active</p>
+    </div>
+    <div class="card">
+      <h3>10</h3>
+      <p>Pending</p>
+    </div>
+  </div>
+
+  <!-- Users -->
+  <h2>Users</h2>
+  <div class="user-list">
+    <div class="user-card">
+      <div class="user-info">
+        <span>John Doe</span>
+        <span>john@example.com</span>
+      </div>
+      <div class="user-actions">
+        <button>Edit</button>
+      </div>
+    </div>
+    <div class="user-card">
+      <div class="user-info">
+        <span>Jane Smith</span>
+        <span>jane@example.com</span>
+      </div>
+      <div class="user-actions">
+        <button>Edit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <h2>Add User</h2>
+  <div class="form-container">
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Full Name">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Email Address">
+    <label for="role">Role</label>
+    <select id="role">
+      <option>Admin</option>
+      <option>User</option>
+      <option>Moderator</option>
+    </select>
+    <button>Add User</button>
+  </div>
+
+</div>
+
+<!-- Bottom navigation -->
+<nav>
+  <a href="#" class="active">Dashboard</a>
+  <a href="#">Users</a>
+  <a href="#">Forms</a>
+</nav>
+
+</body>
+</html>

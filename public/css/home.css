@@ -48,54 +48,49 @@ body {
 }
 
 .logo-text {
-  display: flex;
-  flex-direction: column;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: bold;
   line-height: 1.1;
-  font-weight: 10;
-}
-
-.logo-text {
-  font-size: 1.4rem;      
-  font-weight: bold;
 }
 
 .logo-text span {
-  font-size: 1.1rem;     
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   color: #ffcc00;
   font-weight: bold;
 }
 
-.logo-text span {
-  color: #ffcc00;
-  font-weight: bold;
+
+/* Tablets */
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 1.3rem;
+  }
+  .logo-text span {
+    font-size: 1rem;
+  }
 }
 
+/* iPhone XR (414px) + most modern phones */
+@media (max-width: 414px) {
+  .logo-text {
+    font-size: 1.15rem;
+  }
+  .logo-text span {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra-small phones (iPhone SE 320px) */
 @media (max-width: 360px) {
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-  font-weight: 10;
+  .logo-text {
+    font-size: 1rem;
+  }
+  .logo-text span {
+    font-size: 0.9rem;
+  }
 }
 
-.logo-text {
-  font-size: 1.1rem;      
-  font-weight: bold;
-}
 
-.logo-text span {
-  font-size: 1rem;     
-  color: #ffcc00;
-  font-weight: bold;
-}
-
-.logo-text span {
-  color: #ffcc00;
-  font-weight: bold;
-}
-
-}
 
 .logo img{
   height: 80px;
@@ -442,6 +437,10 @@ body {
   transition: 0.3s;
 }
 
+.gift-btn a {
+  color: white;
+}
+
 .gift-btn:hover {
   background-color: #333;
 }
@@ -503,7 +502,8 @@ body {
   }
 
   .gift-photo img {
-    object-fit: cover;
+    object-fit: cover; 
+    padding-top: 15px;
   }
 }
 
@@ -541,20 +541,20 @@ body {
 
 @media (max-width: 1700px) {
   .banner img {
-    padding-top: 28px;
+    padding-top: 12px;
   }
 }
 
 
 @media (max-width: 768px) {
   .banner img {
-    padding-top: 28px;
+    padding-top: 65px;
   }
 }
 
 @media (max-width: 420px) {
   .banner img {
-    padding-top: 75px;
+    padding-top: 5px;
   }
 }
 
@@ -770,7 +770,6 @@ body {
 /* === TABLET VIEW === */
 @media (max-width: 992px) {
   .tab-content {
-    padding: 30px;
     margin-left: 18px;
   }
 
@@ -1105,12 +1104,11 @@ body {
 }
 
 
-
 .footer {
   background: #5300a0;
   color: #fff;
   padding: 50px 0;
-  position: relative;
+  width: 100%;
 }
 
 .footer-wrapper {
@@ -1119,8 +1117,9 @@ body {
   align-items: flex-start;
   max-width: 1200px;
   margin: 0 auto;
-  padding: -10 -10px;
-  flex-wrap: wrap;
+  padding: 0 20px; /* FIXED padding */
+  flex-wrap: wrap; /* IMPORTANT for small screens */
+  gap: 20px; /* spacing between items */
 }
 
 /* Left section - info */
@@ -1185,6 +1184,7 @@ body {
   .footer-map {
     width: 90%;
     padding: 0;
+    align-items: center;
   }
 
   .footer-info {
@@ -1195,11 +1195,11 @@ body {
 .as-sex {
   width: 100%;
   display: flex;
-  flex-direction: column; /* Title at top, boxes below */
-  align-items: center;    /* Centers everything horizontally */
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   margin-top: 40px;
-  padding: 0 15px; /* small horizontal padding for mobile */
+  padding: 0 15px;
 }
 
 .as-sex h1 {
@@ -1222,20 +1222,27 @@ body {
   justify-content: center;
   width: 100%;
   max-width: 1200px;
-  flex-wrap: wrap; /* allows boxes to wrap on smaller screens */
+  flex-wrap: wrap;
 }
 
-.male-box, .female-box {
+.male-box,
+.female-box {
   background: #ffffff;
   padding: 22px;
-  flex: 1 1 45%; /* flexible width, min 45% */
-  min-width: 280px; /* smaller minimum for mobile */
+  flex: 1 1 45%;
+  min-width: 280px;
   border-radius: 15px;
   box-shadow: 0px 5px 18px rgba(0,0,0,0.1);
   box-sizing: border-box;
+  transition: transform 0.2s ease;
 }
 
-/* HEADER BLUE STRIP */
+.male-box:hover,
+.female-box:hover {
+  transform: scale(1.01);
+}
+
+/* HEADER STRIP */
 .header {
   width: 100%;
   background: #3f51b5;
@@ -1245,7 +1252,6 @@ body {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 15px;
-  box-sizing: border-box;
 }
 
 .header span {
@@ -1262,21 +1268,10 @@ body {
 .male-content,
 .female-content {
   list-style: none;
-  text-align: left;
   padding: 0;
   margin: 0;
 }
 
-.male-content > a,
-.female-content > a {
-  display: block;
-  font-size: 15px;
-  margin-bottom: 10px;
-  color: #555;
-  font-weight: bold;
-}
-
-/* EACH ROW */
 .male-content li,
 .female-content li {
   padding: 10px 12px;
@@ -1286,7 +1281,6 @@ body {
   position: relative;
 }
 
-/* NUMBER (RIGHT SIDE) */
 .male-content li span,
 .female-content li span {
   position: absolute;
@@ -1295,38 +1289,43 @@ body {
   color: #3f51b5;
 }
 
-/* MEDIA QUERIES FOR RESPONSIVENESS */
+/* -------------------------------------- */
+/*     RESPONSIVENESS  (ALL SMALL PHONES) */
+/* -------------------------------------- */
+
+/* Tablets */
 @media (max-width: 1000px) {
   .as-sex-boxes {
     gap: 20px;
   }
 }
 
+/* Stack boxes vertically */
 @media (max-width: 800px) {
   .as-sex-boxes {
     flex-direction: column;
     gap: 20px;
   }
-
-  .male-box, .female-box {
+  .male-box,
+  .female-box {
     width: 100%;
     max-width: 100%;
   }
 }
 
-@media (max-width: 500px) {
+/* iPhone XR, iPhone 11, Samsung mid-range */
+@media (max-width: 450px) {
   .as-sex h1 {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .as-sex h1 span {
-    font-size: 20px;
+    font-size: 18px;
   }
 
-  .male-content li,
-  .female-content li {
-    font-size: 14px;
-    padding: 8px 10px;
+  .male-box,
+  .female-box {
+    padding: 18px;
   }
 
   .header {
@@ -1335,10 +1334,39 @@ body {
   }
 
   .header span {
-    font-size: 14px;
+    font-size: 13px;
     padding: 2px 8px;
   }
+
+  .male-content li,
+  .female-content li {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
 }
+
+/* Very small screens (iPhone SE, 320px devices) */
+@media (max-width: 360px) {
+  .as-sex {
+    padding: 0 10px;
+  }
+
+  .male-box,
+  .female-box {
+    min-width: 100%;   /* ensures perfect fit */
+    padding: 15px;
+  }
+
+  .header {
+    font-size: 15px;
+  }
+
+  .male-content li,
+  .female-content li {
+    font-size: 13px;
+  }
+}
+
 
 /* Loader overlay */
 .loader-overlay {
