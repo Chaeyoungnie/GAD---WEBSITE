@@ -209,4 +209,46 @@
   }
 }
 
+/* -------------------------------------------------------
+   SCROLL ANIMATION (for Activities Page)
+--------------------------------------------------------- */
 
+.animate h1,
+.animate .year-buttons,
+.animate .year-btn,
+.animate .activity-card {
+  animation: textFade ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% 40%;
+}
+
+.animate img {
+  animation: imageFade ease-out both;
+  animation-timeline: view();
+  animation-range: entry 10% 31%;
+}
+
+/* Keyframes */
+@keyframes textFade {
+  from {
+    opacity: 0;
+    translate: 0 35px;
+    filter: blur(3px);
+  }
+}
+
+@keyframes imageFade {
+  from {
+    opacity: 0;
+    scale: 0.97;
+    filter: brightness(0.5) blur(4px);
+    translate: 0 25px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate * {
+    animation: none !important;
+  }
+}

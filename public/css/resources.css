@@ -287,3 +287,45 @@ section .subtitle {
     grid-column: span 1; /* Stack cards */
   }
 }
+
+/* -------------------------------------------------------
+   SCROLL ANIMATION (Resources Page)
+--------------------------------------------------------- */
+
+.animate h1,
+.animate .subtitle,
+.animate .law-box,
+.animate .section-box {
+  animation: textSlideFade ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% 60%;
+}
+
+.animate .law-box,
+.animate .section-box {
+  animation-delay: 0.1s;
+}
+
+@keyframes textSlideFade {
+  from {
+    opacity: 0;
+    translate: 0 35px;
+    filter: blur(4px) brightness(.7);
+  }
+}
+
+@keyframes imageSlideFade {
+  from {
+    opacity: 0;
+    translate: 0 25px;
+    scale: .97;
+    filter: blur(3px) brightness(.6);
+  }
+}
+
+/* Reduce-motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate * {
+    animation: none !important;
+  }
+}

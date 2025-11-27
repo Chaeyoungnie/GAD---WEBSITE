@@ -1,4 +1,88 @@
 import { db } from "./firebase.js";
 import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function _0x3694(_0x55d843,_0x24b1e7){const _0x76c6c6=_0x76c6();return _0x3694=function(_0x369486,_0x303803){_0x369486=_0x369486-0x10f;let _0x273065=_0x76c6c6[_0x369486];return _0x273065;},_0x3694(_0x55d843,_0x24b1e7);}const _0x5cfc67=_0x3694;(function(_0x30f9e1,_0x2d9d54){const _0x3b4314=_0x3694,_0x596577=_0x30f9e1();while(!![]){try{const _0x4319a8=-parseInt(_0x3b4314(0x138))/0x1*(parseInt(_0x3b4314(0x13c))/0x2)+-parseInt(_0x3b4314(0x116))/0x3+parseInt(_0x3b4314(0x129))/0x4+parseInt(_0x3b4314(0x134))/0x5+parseInt(_0x3b4314(0x119))/0x6*(-parseInt(_0x3b4314(0x139))/0x7)+-parseInt(_0x3b4314(0x12f))/0x8+parseInt(_0x3b4314(0x141))/0x9;if(_0x4319a8===_0x2d9d54)break;else _0x596577['push'](_0x596577['shift']());}catch(_0x2f8094){_0x596577['push'](_0x596577['shift']());}}}(_0x76c6,0xbaf3a));function _0x76c6(){const _0x31967e=['yearButtons','getElementById','click','.year-btn','error','add','title','\x22\x20class=\x22activity-img\x22>','year','appendChild','empty','button','keys','5652924WjYkwg','activities','activity-card','description','createdAt','createElement','5416920fthXdd','push','data','active','<p\x20style=\x27color:red;\x27>Failed\x20to\x20load\x20activities.</p>','980805BoUrea','desc','location','classList','13921fDNBBD','147bwqPOA','textContent','\x22\x20alt=\x22','10JhqInQ','innerHTML','remove','href','addEventListener','20151558IxbaNB','div','forEach','</p>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','<img\x20src=\x22','querySelectorAll','<p>No\x20activities\x20found.</p>','imageUrls','3137031MYuHHG','yearActivityContainer','Unknown\x20Year','368658cnHXBa','<p\x20style=\x27text-align:center;\x27>Select\x20a\x20year\x20to\x20view\x20activities.</p>','DOMContentLoaded'];_0x76c6=function(){return _0x31967e;};return _0x76c6();}const yearButtonsContainer=document[_0x5cfc67(0x11d)](_0x5cfc67(0x11c)),yearActivityContainer=document[_0x5cfc67(0x11d)](_0x5cfc67(0x117));let groupedActivities={};async function loadActivities(){const _0xc3878=_0x5cfc67;try{const _0x4d384e=query(collection(db,_0xc3878(0x12a)),orderBy(_0xc3878(0x12d),_0xc3878(0x135))),_0x58676c=await getDocs(_0x4d384e);if(_0x58676c[_0xc3878(0x126)]){yearButtonsContainer[_0xc3878(0x13d)]=_0xc3878(0x114),yearActivityContainer[_0xc3878(0x13d)]='';return;}groupedActivities={},_0x58676c[_0xc3878(0x110)](_0x350206=>{const _0x3d0c6b=_0xc3878,_0x307511=_0x350206[_0x3d0c6b(0x131)](),_0x3409c5=_0x350206['id'],_0x5928ca=_0x307511[_0x3d0c6b(0x124)]||_0x3d0c6b(0x118);if(!groupedActivities[_0x5928ca])groupedActivities[_0x5928ca]=[];groupedActivities[_0x5928ca][_0x3d0c6b(0x130)]({'id':_0x3409c5,..._0x307511});});const _0x1fdd26=Object[_0xc3878(0x128)](groupedActivities)['sort']((_0x353dde,_0x15c546)=>_0x15c546-_0x353dde);yearButtonsContainer['innerHTML']='',_0x1fdd26[_0xc3878(0x110)](_0x26b1b8=>{const _0x3629a2=_0xc3878,_0x572a09=document[_0x3629a2(0x12e)](_0x3629a2(0x127));_0x572a09[_0x3629a2(0x13a)]=_0x26b1b8,_0x572a09[_0x3629a2(0x137)][_0x3629a2(0x121)]('year-btn'),_0x572a09[_0x3629a2(0x140)](_0x3629a2(0x11e),()=>showActivitiesForYear(_0x26b1b8,_0x572a09)),yearButtonsContainer[_0x3629a2(0x125)](_0x572a09);}),yearActivityContainer[_0xc3878(0x13d)]=_0xc3878(0x11a);}catch(_0x407402){console[_0xc3878(0x120)]('Error\x20loading\x20activities:',_0x407402),yearButtonsContainer[_0xc3878(0x13d)]=_0xc3878(0x133),yearActivityContainer[_0xc3878(0x13d)]='';}}function showActivitiesForYear(_0x248e6d,_0x4be2d1){const _0x342993=_0x5cfc67;document[_0x342993(0x113)](_0x342993(0x11f))[_0x342993(0x110)](_0x2739b1=>_0x2739b1[_0x342993(0x137)][_0x342993(0x13e)]('active')),_0x4be2d1[_0x342993(0x137)][_0x342993(0x121)](_0x342993(0x132));const _0x168a79=groupedActivities[_0x248e6d];yearActivityContainer[_0x342993(0x13d)]='',_0x168a79[_0x342993(0x110)](_0x7e098d=>{const _0x59f913=_0x342993,_0x5660ed=document[_0x59f913(0x12e)](_0x59f913(0x10f));_0x5660ed['classList'][_0x59f913(0x121)](_0x59f913(0x12b));const _0x519ec0=_0x7e098d['coverPhotoUrl']||_0x7e098d[_0x59f913(0x115)]&&_0x7e098d[_0x59f913(0x115)][0x0]||'';_0x5660ed[_0x59f913(0x13d)]='\x0a\x20\x20\x20\x20\x20\x20'+(_0x519ec0?_0x59f913(0x112)+_0x519ec0+_0x59f913(0x13b)+_0x7e098d[_0x59f913(0x122)]+_0x59f913(0x123):'')+'\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22activity-info\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h3>'+_0x7e098d['title']+'</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<p>'+_0x7e098d[_0x59f913(0x12c)]+_0x59f913(0x111),_0x5660ed['addEventListener'](_0x59f913(0x11e),()=>{const _0x372996=_0x59f913;window[_0x372996(0x136)][_0x372996(0x13f)]='activity.html?id='+_0x7e098d['id'];}),yearActivityContainer[_0x59f913(0x125)](_0x5660ed);});}window['addEventListener'](_0x5cfc67(0x11b),loadActivities);
+const yearButtonsContainer = document.getElementById("yearButtons");
+const yearActivityContainer = document.getElementById("yearActivityContainer");
+
+let groupedActivities = {}; // store grouped activities globally
+
+// Load activities from Firestore
+async function loadActivities() {
+  try {
+    const q = query(collection(db, "activities"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      yearButtonsContainer.innerHTML = "<p>No activities found.</p>";
+      yearActivityContainer.innerHTML = "";
+      return;
+    }
+
+    // Group activities by year
+    groupedActivities = {};
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      const year = data.year || "Unknown Year";
+      if (!groupedActivities[year]) groupedActivities[year] = [];
+      groupedActivities[year].push({ id, ...data });
+    });
+
+    // Sort years descending
+    const years = Object.keys(groupedActivities).sort((a, b) => b - a);
+
+    // Render year buttons
+    yearButtonsContainer.innerHTML = "";
+    years.forEach(year => {
+      const btn = document.createElement("button");
+      btn.textContent = year;
+      btn.classList.add("year-btn");
+      btn.addEventListener("click", () => showActivitiesForYear(year, btn));
+      yearButtonsContainer.appendChild(btn);
+    });
+
+    // Initially show a message
+    yearActivityContainer.innerHTML = "<p style='text-align:center;'>Select a year to view activities.</p>";
+
+  } catch (err) {
+    console.error("Error loading activities:", err);
+    yearButtonsContainer.innerHTML = "<p style='color:red;'>Failed to load activities.</p>";
+    yearActivityContainer.innerHTML = "";
+  }
+}
+
+// Show activities for a specific year
+function showActivitiesForYear(year, btn) {
+  // Highlight the active button
+  document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  const activities = groupedActivities[year];
+  yearActivityContainer.innerHTML = "";
+
+  activities.forEach(act => {
+    const card = document.createElement("div");
+    card.classList.add("activity-card");
+
+    // Use coverPhotoUrl if available
+    const coverImage = act.coverPhotoUrl || (act.imageUrls && act.imageUrls[0]) || "";
+
+    card.innerHTML = `
+      ${coverImage ? `<img src="${coverImage}" alt="${act.title}" class="activity-img">` : ""}
+      <div class="activity-info">
+        <h3>${act.title}</h3>
+        <p>${act.description}</p>
+      </div>
+    `;
+
+    // Click redirects to activity page with ID
+    card.addEventListener("click", () => {
+      window.location.href = `activity.html?id=${act.id}`;
+    });
+
+    yearActivityContainer.appendChild(card);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", loadActivities);
+

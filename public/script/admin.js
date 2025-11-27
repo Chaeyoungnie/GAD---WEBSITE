@@ -766,8 +766,10 @@ async function loadCampaignTheme() {
 
   if (themeDoc.exists()) {
     const data = themeDoc.data();
+
     document.getElementById("theme-title").value = data.title || "";
     document.getElementById("theme-description").value = data.description || "";
+    document.getElementById("theme-link").value = data.link || "";   // ⬅ Added
     document.getElementById("theme-image-preview").src = data.imageUrl || "";
   }
 }
@@ -776,8 +778,10 @@ async function saveCampaignTheme(e) {
   e.preventDefault();
 
   const status = document.getElementById("theme-status");
+
   const title = document.getElementById("theme-title").value.trim();
   const description = document.getElementById("theme-description").value.trim();
+  const link = document.getElementById("theme-link").value.trim(); // ⬅ Added
   const file = document.getElementById("theme-image").files[0];
 
   status.textContent = "Uploading...";
@@ -792,6 +796,7 @@ async function saveCampaignTheme(e) {
     await setDoc(doc(db, "siteSettings", "campaignTheme"), {
       title,
       description,
+      link,        // ⬅ Save link to Firestore
       imageUrl,
       updatedAt: serverTimestamp()
     });
@@ -806,6 +811,7 @@ async function saveCampaignTheme(e) {
     status.textContent = "❌ Error saving.";
   }
 }
+
 
 document.getElementById("campaign-theme-form")
   .addEventListener("submit", saveCampaignTheme);

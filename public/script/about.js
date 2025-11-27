@@ -34,7 +34,7 @@ async function displayMembers() {
         chairpersonList.appendChild(memberCard);
       } else if (member.position === 'Vice-Chairperson') {
         viceChairpersonList.appendChild(memberCard);
-      } else if (member.position === 'Secretary') {
+      } else if (member.position === 'Secretariat') {
         secretaryList.appendChild(memberCard);
       } else if (member.position === 'Member') {
         membersList.appendChild(memberCard);

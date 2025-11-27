@@ -9,14 +9,69 @@
 
 </head>
 <body>
-
 <div class="login-container">
+
+  <div class="login-logo">
+    <!-- ICY STRAWBERRY LOGO -->
+    <svg width="55" height="55" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+
+      <defs>
+        <filter id="iceGlow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <linearGradient id="strawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff7aa8"/>
+          <stop offset="50%" stop-color="#ff4b7b"/>
+          <stop offset="100%" stop-color="#ffd5e1"/>
+        </linearGradient>
+
+        <linearGradient id="iceFrost" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-opacity="0.8" stop-color="#fff"/>
+          <stop offset="100%" stop-opacity="0.1" stop-color="#d8f5ff"/>
+        </linearGradient>
+
+        <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#b3ffdd"/>
+          <stop offset="100%" stop-color="#55dd99"/>
+        </linearGradient>
+      </defs>
+
+      <path d="M100 30c-28 0-55 20-55 55 0 50 45 80 55 80s55-30 55-80c0-35-27-55-55-55z"
+            fill="url(#strawGradient)"
+            stroke="#ffffff"
+            stroke-width="4"
+            filter="url(#iceGlow)"/>
+
+      <ellipse cx="85" cy="75" rx="35" ry="25" fill="url(#iceFrost)" opacity="0.6"/>
+
+      <g fill="#fff">
+        <circle cx="90" cy="100" r="5"/>
+        <circle cx="70" cy="90" r="5"/>
+        <circle cx="110" cy="90" r="5"/>
+        <circle cx="100" cy="120" r="5"/>
+        <circle cx="80" cy="120" r="5"/>
+      </g>
+
+      <path d="M100 30c-10-15-25-20-35-5 15 5 15 15 5 22 20 5 35-3 30-17z"
+            fill="url(#leafGradient)" stroke="#fff" stroke-width="3"/>
+      <path d="M100 30c10-15 25-20 35-5-15 5-15 15-5 22-20 5-35-3-30-17z"
+            fill="url(#leafGradient)" stroke="#fff" stroke-width="3"/>
+
+    </svg>
+  </div>
+
   <h1>Admin Login</h1>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
   <button id="login-btn">Login</button>
   <p id="error-msg" class="error-msg"></p>
 </div>
+
 
   <script type="module" src="script/login.js"></script>
 </body>

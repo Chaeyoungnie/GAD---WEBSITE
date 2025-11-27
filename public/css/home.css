@@ -1398,3 +1398,43 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* --- Scroll Animation --- */
+
+.scroll p,
+.scroll h1,
+.scroll h2,
+.scroll h3,
+.scroll h4,
+.scroll h5,
+.scroll h6,
+.scroll blockquote,
+.scroll hr {
+  animation: text-appear ease-in both;
+  animation-timeline: view();
+  animation-range: 0vh 31vh;
+}
+
+
+@keyframes text-appear {
+  from {
+    opacity: 0;
+    translate: 0 8rem;
+  }
+}
+
+@keyframes image-appear {
+  from {
+    filter: saturate(0) contrast(4) brightness(.1) blur(3px);
+    opacity: 0;
+    scale: .95;
+    translate: 0 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll * {
+    animation: none !important;
+  }
+}

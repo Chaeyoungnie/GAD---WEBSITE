@@ -1,4 +1,37 @@
 import { auth } from "./firebase.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const _0x88ab0e=_0x138f;function _0x4e51(){const _0x459110=['Enter','1000239ZHTXxr','8ibhenF','location','getElementById','value','email','trim','9drLXdO','key','5LXXVGB','❌\x20Not\x20authorized.','❌\x20Invalid\x20email\x20or\x20password.','click','floor','textContent','38QDJiZq','14232230LKqOgR','5694076BPKTlo','preventDefault','⚠️\x20Please\x20enter\x20email\x20and\x20password.','211107vodzZT','error-msg','login-btn','random','href','error','4082568DrgboV','Login\x20Error:','32431102VvcLkB','gad-admin@gad-email.com','keypress','8293089SrgcpE'];_0x4e51=function(){return _0x459110;};return _0x4e51();}(function(_0x2be323,_0xf32b1e){const _0x2c52b7=_0x138f,_0x322b12=_0x2be323();while(!![]){try{const _0x1c1b6e=parseInt(_0x2c52b7(0x1be))/0x1+-parseInt(_0x2c52b7(0x1ac))/0x2*(parseInt(_0x2c52b7(0x1b1))/0x3)+-parseInt(_0x2c52b7(0x1ae))/0x4*(parseInt(_0x2c52b7(0x1a6))/0x5)+-parseInt(_0x2c52b7(0x1b7))/0x6+-parseInt(_0x2c52b7(0x1bc))/0x7*(parseInt(_0x2c52b7(0x1bf))/0x8)+parseInt(_0x2c52b7(0x1a4))/0x9*(parseInt(_0x2c52b7(0x1ad))/0xa)+parseInt(_0x2c52b7(0x1b9))/0xb;if(_0x1c1b6e===_0xf32b1e)break;else _0x322b12['push'](_0x322b12['shift']());}catch(_0x2d063b){_0x322b12['push'](_0x322b12['shift']());}}}(_0x4e51,0xb624b));const delay=Math[_0x88ab0e(0x1aa)](Math[_0x88ab0e(0x1b4)]()*0x7d0)+0xbb8,loginBtn=document['getElementById'](_0x88ab0e(0x1b3)),errorMsg=document['getElementById'](_0x88ab0e(0x1b2));function _0x138f(_0x1685ea,_0x589a93){const _0x4e5156=_0x4e51();return _0x138f=function(_0x138f48,_0x3af016){_0x138f48=_0x138f48-0x1a4;let _0x57a9e8=_0x4e5156[_0x138f48];return _0x57a9e8;},_0x138f(_0x1685ea,_0x589a93);}loginBtn['addEventListener'](_0x88ab0e(0x1a9),async _0x32da99=>{const _0x43c770=_0x88ab0e;_0x32da99[_0x43c770(0x1af)]();const _0x112325=document['getElementById'](_0x43c770(0x1c3))[_0x43c770(0x1c2)][_0x43c770(0x1c4)](),_0x33ee4d=document[_0x43c770(0x1c1)]('password')['value'][_0x43c770(0x1c4)]();if(!_0x112325||!_0x33ee4d){errorMsg[_0x43c770(0x1ab)]=_0x43c770(0x1b0);return;}try{const _0x2712f7=await signInWithEmailAndPassword(auth,_0x112325,_0x33ee4d),_0x147000=_0x2712f7['user'],_0x9561c7=_0x43c770(0x1ba);if(_0x147000[_0x43c770(0x1c3)]!==_0x9561c7){errorMsg[_0x43c770(0x1ab)]=_0x43c770(0x1a7),await auth['signOut']();return;}window[_0x43c770(0x1c0)][_0x43c770(0x1b5)]='admin.html';}catch(_0x4a0ae0){console[_0x43c770(0x1b6)](_0x43c770(0x1b8),_0x4a0ae0),errorMsg[_0x43c770(0x1ab)]=_0x43c770(0x1a8);}}),document['addEventListener'](_0x88ab0e(0x1bb),function(_0x26c8b8){const _0x334e4d=_0x88ab0e;_0x26c8b8[_0x334e4d(0x1a5)]===_0x334e4d(0x1bd)&&document['getElementById'](_0x334e4d(0x1b3))[_0x334e4d(0x1a9)]();}),setTimeout(()=>{const _0x38bd62=_0x88ab0e;window[_0x38bd62(0x1c0)][_0x38bd62(0x1b5)]='home.html';},delay);
+const loginBtn = document.getElementById("login-btn");
+const errorMsg = document.getElementById("error-msg");
+
+loginBtn.addEventListener("click", async (e) => {
+  e.preventDefault(); // prevent form submission
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    errorMsg.textContent = "⚠️ Please enter email and password.";
+    return;
+  }
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // ✅ Restrict login to a single admin email
+    const ADMIN_EMAIL = "gad-admin@gad-email.com"; // change this to your admin email
+    if (user.email !== ADMIN_EMAIL) {
+      errorMsg.textContent = "❌ Not authorized.";
+      await auth.signOut();
+      return;
+    }
+
+    // Redirect to admin dashboard
+    window.location.href = "admin.html";
+
+  } catch (err) {
+    console.error("Login Error:", err);
+    errorMsg.textContent = "❌ Invalid email or password.";
+  }
+});

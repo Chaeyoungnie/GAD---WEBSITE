@@ -72,9 +72,28 @@
       margin-top: 10px;
       font-size: 0.9rem;
     }
+    
 
     @media (max-width: 480px) {
       .login-container {
         padding: 30px 20px;
       }
     }
+
+    /* Position & size logo inside login card */
+.login-logo {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.login-logo svg {
+  width: 15px; /* small size */
+  height: auto;
+}
+
+/* Make sure login card supports absolute positioning */
+.login-container {
+  position: relative;
+  padding-top: 80px; /* room so the title doesn't overlap the logo */
+}

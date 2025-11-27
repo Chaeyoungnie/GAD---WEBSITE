@@ -1,6 +1,551 @@
+// Create loader dynamically
+const loader = document.createElement('div');
+loader.id = 'loader';
+loader.className = 'loader-overlay';
+loader.innerHTML = '<div class="spinner"></div>';
+document.body.appendChild(loader);
+
+// Reference to your content container
+const content = document.getElementById('content'); // make sure your content container exists
+
+// Show/hide functions
+function showLoader() {
+  loader.style.display = 'flex';
+  if(content) content.style.display = 'none';
+}
+
+function hideLoader() {
+  loader.style.display = 'none';
+  if(content) content.style.display = 'block';
+}
+
+
 import { db } from "./firebase.js";
 import { 
   collection, query, orderBy, onSnapshot, doc, getDoc, where, limit, getDocs 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const _0x44cfa5=_0x1554;(function(_0x300939,_0x58154d){const _0xcb4d3a=_0x1554,_0x15ebc9=_0x300939();while(!![]){try{const _0x4084c0=parseInt(_0xcb4d3a(0x230))/0x1*(parseInt(_0xcb4d3a(0x1e6))/0x2)+-parseInt(_0xcb4d3a(0x1e2))/0x3*(parseInt(_0xcb4d3a(0x250))/0x4)+parseInt(_0xcb4d3a(0x244))/0x5*(parseInt(_0xcb4d3a(0x25d))/0x6)+parseInt(_0xcb4d3a(0x1aa))/0x7*(-parseInt(_0xcb4d3a(0x1d6))/0x8)+parseInt(_0xcb4d3a(0x20f))/0x9*(parseInt(_0xcb4d3a(0x1a1))/0xa)+-parseInt(_0xcb4d3a(0x1f0))/0xb+parseInt(_0xcb4d3a(0x203))/0xc;if(_0x4084c0===_0x58154d)break;else _0x15ebc9['push'](_0x15ebc9['shift']());}catch(_0x3e2039){_0x15ebc9['push'](_0x15ebc9['shift']());}}}(_0x7071,0x6316b));const loader=document[_0x44cfa5(0x1fa)](_0x44cfa5(0x1d7));loader['id']='loader',loader[_0x44cfa5(0x25f)]=_0x44cfa5(0x1fc),loader[_0x44cfa5(0x1a6)]=_0x44cfa5(0x247),document[_0x44cfa5(0x1d5)][_0x44cfa5(0x224)](loader);function _0x1554(_0x46d55f,_0x4a00bf){const _0x707142=_0x7071();return _0x1554=function(_0x155469,_0x2f3e41){_0x155469=_0x155469-0x1a0;let _0x30a8c6=_0x707142[_0x155469];return _0x30a8c6;},_0x1554(_0x46d55f,_0x4a00bf);}const content=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1eb));function showLoader(){const _0x376ee3=_0x44cfa5;loader[_0x376ee3(0x225)][_0x376ee3(0x227)]=_0x376ee3(0x219);if(content)content[_0x376ee3(0x225)][_0x376ee3(0x227)]='none';}function hideLoader(){const _0x10cad3=_0x44cfa5;loader[_0x10cad3(0x225)][_0x10cad3(0x227)]=_0x10cad3(0x20d);if(content)content['style']['display']=_0x10cad3(0x1ee);}document[_0x44cfa5(0x1be)]('DOMContentLoaded',async()=>{const _0x3b402c=_0x44cfa5;console[_0x3b402c(0x1d8)](_0x3b402c(0x256));const _0x5f09da=document['getElementById']('burger'),_0x4daf12=document[_0x3b402c(0x1fd)]('nav-links');_0x5f09da&&_0x4daf12&&_0x5f09da[_0x3b402c(0x1be)](_0x3b402c(0x1cf),()=>{const _0x1f8943=_0x3b402c;_0x4daf12[_0x1f8943(0x1a9)][_0x1f8943(0x23b)](_0x1f8943(0x1fe)),_0x5f09da[_0x1f8943(0x1a9)][_0x1f8943(0x23b)](_0x1f8943(0x23b));}),await fetchBanner(),await loadCampaignThemePublic(),fetchPosts(_0x3b402c(0x1c7),document[_0x3b402c(0x1fd)](_0x3b402c(0x1d9))),fetchPosts('event',document[_0x3b402c(0x1fd)]('events')),fetchDocumentations(),fetchHotlines(),fetchCalendarEvents(),await loadResource(_0x3b402c(0x1bf),_0x3b402c(0x1e3)),await loadResource(_0x3b402c(0x1a4),'so-grid'),await loadResource(_0x3b402c(0x1ec),_0x3b402c(0x23a)),await loadResource(_0x3b402c(0x23d),_0x3b402c(0x1c8)),await loadResource(_0x3b402c(0x262),_0x3b402c(0x23f));});async function fetchBanner(){const _0x416b8f=_0x44cfa5,_0x4c6fda=document[_0x416b8f(0x1fd)](_0x416b8f(0x232));if(!_0x4c6fda)return;try{const _0x4bc9cc=await getDoc(doc(db,_0x416b8f(0x1f9),_0x416b8f(0x1c3)));_0x4c6fda[_0x416b8f(0x20a)]=_0x4bc9cc[_0x416b8f(0x241)]()?_0x4bc9cc[_0x416b8f(0x231)]()[_0x416b8f(0x22d)]||_0x416b8f(0x220):'images/4ft\x20x\x2011ft\x20Streamer.png';}catch(_0x305b07){console[_0x416b8f(0x21c)]('Error\x20fetching\x20banner:',_0x305b07),_0x4c6fda[_0x416b8f(0x20a)]='images/4ft\x20x\x2011ft\x20Streamer.png';}}async function loadCampaignThemePublic(){const _0x268de5=_0x44cfa5;try{const _0x3c1d89=await getDoc(doc(db,_0x268de5(0x1a8),_0x268de5(0x1ad)));if(!_0x3c1d89[_0x268de5(0x241)]())return;const _0x582419=_0x3c1d89[_0x268de5(0x231)](),_0x28de1d=document[_0x268de5(0x1fd)](_0x268de5(0x1d4)),_0x2a1e35=document[_0x268de5(0x1fd)]('campaign-description'),_0x319558=document[_0x268de5(0x1fd)](_0x268de5(0x1b1));if(_0x28de1d)_0x28de1d[_0x268de5(0x25c)]=_0x582419['title']||'';if(_0x2a1e35)_0x2a1e35[_0x268de5(0x1a6)]=_0x582419[_0x268de5(0x1ae)]?_0x582419[_0x268de5(0x1ae)]['replace'](/\n/g,'<br>'):'';if(_0x319558)_0x319558[_0x268de5(0x20a)]=_0x582419[_0x268de5(0x22d)]||'';}catch(_0xa6933a){console[_0x268de5(0x21c)](_0x268de5(0x25a),_0xa6933a);}}async function loadResource(_0x29f1f8,_0x1f8f72){const _0x2a5e7c=_0x44cfa5;try{const _0xaab556=query(collection(db,_0x2a5e7c(0x226)),where(_0x2a5e7c(0x235),'==',_0x29f1f8),orderBy(_0x2a5e7c(0x1db),_0x2a5e7c(0x207))),_0x4fd903=await getDocs(_0xaab556),_0xe455b0=document['getElementById'](_0x1f8f72);if(!_0xe455b0)return;_0xe455b0['innerHTML']='';if(_0x4fd903['empty'])return;_0x4fd903[_0x2a5e7c(0x240)]['forEach'](_0x3c124f=>{const _0xe9b53c=_0x2a5e7c,_0x1949d9=_0x3c124f[_0xe9b53c(0x231)](),_0x30d9ff=document[_0xe9b53c(0x1fa)](_0xe9b53c(0x1d7));_0x30d9ff[_0xe9b53c(0x25f)]=_0xe9b53c(0x251),_0x30d9ff[_0xe9b53c(0x1a6)]=_0xe9b53c(0x215)+(_0x1949d9['title']||'')+_0xe9b53c(0x229)+(_0x1949d9[_0xe9b53c(0x1ae)]||'')+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22'+(_0x1949d9[_0xe9b53c(0x1b8)]||'#')+_0xe9b53c(0x254),_0xe455b0[_0xe9b53c(0x224)](_0x30d9ff);});}catch(_0x5281be){console[_0x2a5e7c(0x21c)](_0x2a5e7c(0x260)+_0x29f1f8+'\x22:',_0x5281be);}}function fetchPosts(_0xce6c5e,_0xeaeeee){const _0x5a071b=_0x44cfa5;if(!_0xeaeeee)return;const _0x331fce=query(collection(db,_0x5a071b(0x249)),orderBy(_0x5a071b(0x1db),_0x5a071b(0x207)));onSnapshot(_0x331fce,_0x52bbbf=>{const _0x5a307d=_0x5a071b;_0xeaeeee[_0x5a307d(0x1a6)]='';const _0x857a9e=_0x52bbbf[_0x5a307d(0x240)][_0x5a307d(0x24c)](_0x51b1e5=>_0x51b1e5['data']()['type']===_0xce6c5e);if(_0x857a9e[_0x5a307d(0x1c6)]===0x0){_0xeaeeee[_0x5a307d(0x1a6)]=_0x5a307d(0x20b)+_0xce6c5e+'s\x20yet.</p>';return;}_0x857a9e['forEach'](_0x27c479=>{const _0x50890e=_0x5a307d,_0x34f4ca=_0x27c479[_0x50890e(0x231)](),_0x2196a7=document[_0x50890e(0x1fa)](_0x50890e(0x1d7));_0x2196a7['classList'][_0x50890e(0x1ac)](_0x50890e(0x253));const _0x330bd9=0x78,_0x3d9fd3=_0x34f4ca[_0x50890e(0x1ae)][_0x50890e(0x1c6)]>_0x330bd9?_0x34f4ca['description'][_0x50890e(0x1a7)](0x0,_0x330bd9)+'…':_0x34f4ca[_0x50890e(0x1ae)];_0x2196a7[_0x50890e(0x1a6)]=_0x50890e(0x258)+(_0x34f4ca['imageUrl']?_0x50890e(0x1bd)+_0x34f4ca['imageUrl']+_0x50890e(0x259):'')+_0x50890e(0x1af)+_0x34f4ca['title']+_0x50890e(0x1c2)+_0x3d9fd3+_0x50890e(0x1e5)+(_0x34f4ca[_0x50890e(0x1db)]?.['toDate']?_0x34f4ca[_0x50890e(0x1db)][_0x50890e(0x233)]()[_0x50890e(0x202)]():'')+'</small>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<hr>\x0a\x20\x20\x20\x20\x20\x20',_0x2196a7[_0x50890e(0x1be)](_0x50890e(0x1cf),()=>openPostModal(_0x34f4ca)),_0xeaeeee[_0x50890e(0x224)](_0x2196a7);});},_0x2b5b33=>{const _0x1dc539=_0x5a071b;console[_0x1dc539(0x21c)](_0x1dc539(0x246)+_0xce6c5e+':',_0x2b5b33),_0xeaeeee[_0x1dc539(0x1a6)]=_0x1dc539(0x1c1)+_0xce6c5e+_0x1dc539(0x255);});}function _0x7071(){const _0x33d133=['next-month','female-psamd','Error\x20fetching\x20calendar\x20events:','banners','createElement','DateTimeFormat','loader-overlay','getElementById','active','target','getDay','documentations','toLocaleString','5244252FZceyN','\x22\x20style=\x22width:100%;border-radius:8px;\x22>','asc','DOMContentLoaded','desc','remove','.next','src','<p>No\x20','onload','none','phone','261HIYbzz','getMonth','Error\x20fetching\x20footer\x20data:','display-address','</small>\x0a\x20\x20\x20\x20\x20\x20<hr>\x0a\x20\x20\x20\x20','calendar-modal-overlay','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h3>','male-asod','<p>No\x20documentation\x20images\x20uploaded\x20yet.</p>','bgmd','flex','long','forEach','error','Error\x20fetching\x20documentations:','\x22\x20alt=\x22Documentation\x22>','pointer','images/4ft\x20x\x2011ft\x20Streamer.png','calendar-month-year','footer','.close-modal','appendChild','style','resources','display','dataset','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<p>','calendar-event','hotlines','\x0a\x20\x20\x20\x20\x20\x20\x20\x20Tel.\x20Nos.:\x20<strong>','imageUrl','post-modal-overlay','onclick','95AYfhWn','data','home-banner','toDate','.card-slide','type','address','calendar-day','Error\x20fetching\x20hotlines:\x20','gsd','gad-grid','toggle','date','dswdAgenda','mapUrl','gl-grid','docs','exists','Thu','category','3376115ZJPJBR','today','Error\x20fetching\x20','<div\x20class=\x22spinner\x22></div>','sexData','posts','.tab-pane','female-ramd','filter','getFullYear','querySelectorAll','ramd','1628LGagdY','section-box','span','announcement-item','\x22\x20target=\x22_blank\x22>Read\x20More</a>\x0a\x20\x20\x20\x20\x20\x20','s.</p>','DOM\x20fully\x20loaded\x20✅','No\x20address\x20set.','\x0a\x20\x20\x20\x20\x20\x20\x20\x20','\x22\x20class=\x22announcement-img\x22\x20/>','Error\x20loading\x20campaign\x20theme:','psamd','textContent','6PLluKS','inactive','className','Error\x20loading\x20resources\x20of\x20type\x20\x22','\x0a\x20\x20\x20\x20\x20\x20','genderlaws','\x0a\x20\x20\x20\x20\x20\x20<h2>','66730mtVtdZ','footer-map','title','specialOrders','&times;','innerHTML','substring','siteSettings','classList','43715CXVYSE','marginBottom','add','campaignTheme','description','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h1>','female-bgmd','campaign-image','male-ramd','background:#fff;border-radius:10px;padding:20px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto;position:relative;','asod','Mon','#hotlines\x20.hotline-container','Sat','fileUrl','tab','male-pmd','female-pmd','</h2>\x0a\x20\x20\x20\x20\x20\x20<p>','<img\x20src=\x22','addEventListener','accomplishmentReports','female','<p>Error\x20loading\x20','</h1>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<p>','site-banner','home','cursor','length','announcement','dswd-grid','padStart','hotline-card','display-contact','male-psamd','male-gsd','prev','click','doc-slider','\x22\x20alt=\x22','next','querySelector','campaign-title','body','456efwttY','div','log','announcements','female-asod','createdAt','male-total','female-gsd','number','</p>\x0a\x20\x20\x20\x20\x20\x20<small>','footer_data','en-US','4194XJnCAm','acc-grid','.calendar-grid','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<small>','10226FtbVBy','format','Fri','male','your-collection-name','content','gadLaws','</a>\x0a\x20\x20\x20\x20\x20\x20','block','</strong><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20Email:\x20<a\x20href=\x22mailto:','5067458lqGUka','pmd','No\x20footer\x20data\x20found.','email','.prev','map'];_0x7071=function(){return _0x33d133;};return _0x7071();}function openPostModal(_0x500554){const _0x694ab8=_0x44cfa5,_0x39d5fc=document[_0x694ab8(0x1fa)](_0x694ab8(0x1d7));_0x39d5fc[_0x694ab8(0x1a9)][_0x694ab8(0x1ac)](_0x694ab8(0x22e)),_0x39d5fc[_0x694ab8(0x1a6)]='\x0a\x20\x20\x20\x20<div\x20class=\x22post-modal\x22>\x0a\x20\x20\x20\x20\x20\x20<span\x20class=\x22close-modal\x22>&times;</span>\x0a\x20\x20\x20\x20\x20\x20'+(_0x500554['imageUrl']?_0x694ab8(0x1bd)+_0x500554['imageUrl']+_0x694ab8(0x1d1)+_0x500554['title']+'\x22>':'')+_0x694ab8(0x1a0)+_0x500554[_0x694ab8(0x1a3)]+_0x694ab8(0x1bc)+_0x500554[_0x694ab8(0x1ae)]+_0x694ab8(0x1df)+(_0x500554['createdAt']?.['toDate']?_0x500554[_0x694ab8(0x1db)][_0x694ab8(0x233)]()['toLocaleString']():'')+'</small>\x0a\x20\x20\x20\x20</div>\x0a\x20\x20',document[_0x694ab8(0x1d5)][_0x694ab8(0x224)](_0x39d5fc),_0x39d5fc['querySelector'](_0x694ab8(0x223))['onclick']=()=>_0x39d5fc[_0x694ab8(0x208)](),_0x39d5fc[_0x694ab8(0x1be)]('click',_0x283918=>{const _0x1c0d92=_0x694ab8;if(_0x283918[_0x1c0d92(0x1ff)]===_0x39d5fc)_0x39d5fc['remove']();});}const docSlider=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1d0)),prevBtn=document[_0x44cfa5(0x1d3)](_0x44cfa5(0x1f4)),nextBtn=document[_0x44cfa5(0x1d3)](_0x44cfa5(0x209));function fetchDocumentations(){const _0x57db6e=_0x44cfa5;if(!docSlider)return;const _0x128fe5=query(collection(db,_0x57db6e(0x201)),orderBy('createdAt',_0x57db6e(0x207)));onSnapshot(_0x128fe5,_0x24f5c0=>{const _0x24a6c9=_0x57db6e;docSlider['innerHTML']='';if(_0x24f5c0['empty']){docSlider[_0x24a6c9(0x1a6)]=_0x24a6c9(0x217);return;}_0x24f5c0[_0x24a6c9(0x21b)](_0x2d52fd=>{const _0x242f5a=_0x24a6c9,_0x2eec1f=_0x2d52fd[_0x242f5a(0x231)](),_0x2c2bba=document[_0x242f5a(0x1fa)](_0x242f5a(0x1d7));_0x2c2bba['classList'][_0x242f5a(0x1ac)]('card-slide'),_0x2c2bba[_0x242f5a(0x1a6)]='<img\x20src=\x22'+_0x2eec1f[_0x242f5a(0x22d)]+_0x242f5a(0x21e),docSlider['appendChild'](_0x2c2bba);}),initSlider();},_0x283159=>{const _0x25dcea=_0x57db6e;console[_0x25dcea(0x21c)](_0x25dcea(0x21d),_0x283159),docSlider[_0x25dcea(0x1a6)]='<p>Error\x20loading\x20documentation.</p>';});}function initSlider(){const _0x1799d1=_0x44cfa5,_0x208d64=document[_0x1799d1(0x24e)](_0x1799d1(0x234));if(!_0x208d64[_0x1799d1(0x1c6)])return;let _0x5b3f84=0x0;const _0x3a42d4=()=>{const _0x2bb4f1=_0x1799d1;_0x208d64[_0x2bb4f1(0x21b)]((_0x762f0,_0x4ff5f3)=>{const _0x4e0f2d=_0x2bb4f1;_0x762f0['classList'][_0x4e0f2d(0x208)](_0x4e0f2d(0x1fe),_0x4e0f2d(0x1ce),_0x4e0f2d(0x1d2));if(_0x4ff5f3===_0x5b3f84)_0x762f0[_0x4e0f2d(0x1a9)][_0x4e0f2d(0x1ac)](_0x4e0f2d(0x1fe));else{if(_0x4ff5f3===(_0x5b3f84-0x1+_0x208d64['length'])%_0x208d64[_0x4e0f2d(0x1c6)])_0x762f0['classList'][_0x4e0f2d(0x1ac)](_0x4e0f2d(0x1ce));else{if(_0x4ff5f3===(_0x5b3f84+0x1)%_0x208d64[_0x4e0f2d(0x1c6)])_0x762f0[_0x4e0f2d(0x1a9)]['add'](_0x4e0f2d(0x1d2));}}});};nextBtn&&(nextBtn['onclick']=()=>{_0x5b3f84=(_0x5b3f84+0x1)%_0x208d64['length'],_0x3a42d4();}),prevBtn&&(prevBtn[_0x1799d1(0x22f)]=()=>{const _0x45faac=_0x1799d1;_0x5b3f84=(_0x5b3f84-0x1+_0x208d64[_0x45faac(0x1c6)])%_0x208d64[_0x45faac(0x1c6)],_0x3a42d4();}),setInterval(()=>{_0x5b3f84=(_0x5b3f84+0x1)%_0x208d64['length'],_0x3a42d4();},0xfa0),_0x3a42d4();}async function fetchHotlines(){const _0x55b8da=_0x44cfa5,_0x5a3d00=document[_0x55b8da(0x1d3)](_0x55b8da(0x1b6));if(!_0x5a3d00)return;_0x5a3d00[_0x55b8da(0x1a6)]='';try{const _0x29e574=query(collection(db,_0x55b8da(0x22b)),orderBy('category')),_0x432978=await getDocs(_0x29e574);_0x432978['forEach'](_0x636ec7=>{const _0x180a95=_0x55b8da,_0x43f734=_0x636ec7[_0x180a95(0x231)](),_0x20c78e=document[_0x180a95(0x1fa)](_0x180a95(0x1d7));_0x20c78e[_0x180a95(0x1a9)]['add'](_0x180a95(0x1ca)),_0x20c78e[_0x180a95(0x1a6)]=_0x180a95(0x215)+_0x43f734[_0x180a95(0x243)]+'</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<ul>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>'+_0x43f734['name']+':</strong>\x20'+_0x43f734[_0x180a95(0x1de)]+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</ul>\x0a\x20\x20\x20\x20\x20\x20',_0x5a3d00['appendChild'](_0x20c78e);});}catch(_0x24e34f){console[_0x55b8da(0x21c)](_0x55b8da(0x238),_0x24e34f),_0x5a3d00[_0x55b8da(0x1a6)]='Error\x20fetching\x20hotlines.';}}window[_0x44cfa5(0x20c)]=function(){fetchHotlines();};const calendarGrid=document['querySelector'](_0x44cfa5(0x1e4)),monthYearLabel=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x221));let calendarEvents=[],today=new Date(),currentMonth=today[_0x44cfa5(0x210)](),currentYear=today[_0x44cfa5(0x24d)]();function fetchCalendarEvents(){const _0x227f0c=_0x44cfa5,_0x30134d=query(collection(db,'calendarActivities'),orderBy('date',_0x227f0c(0x205)));onSnapshot(_0x30134d,_0x6eb0d9=>{const _0x37011b=_0x227f0c;calendarEvents=_0x6eb0d9[_0x37011b(0x240)][_0x37011b(0x1f5)](_0x483efe=>({'id':_0x483efe['id'],..._0x483efe[_0x37011b(0x231)]()})),renderCalendar(currentMonth,currentYear);},_0x21d135=>console[_0x227f0c(0x21c)](_0x227f0c(0x1f8),_0x21d135));}function renderCalendar(_0x1ef114,_0x4461c3){const _0x14af4f=_0x44cfa5;if(!calendarGrid||!monthYearLabel)return;calendarGrid['innerHTML']='';const _0x21d145=new Intl[(_0x14af4f(0x1fb))](_0x14af4f(0x1e1),{'month':_0x14af4f(0x21a)})[_0x14af4f(0x1e7)](new Date(_0x4461c3,_0x1ef114));monthYearLabel['textContent']=_0x21d145+'\x20'+_0x4461c3;const _0x1cebbe=['Sun',_0x14af4f(0x1b5),'Tue','Wed',_0x14af4f(0x242),_0x14af4f(0x1e8),_0x14af4f(0x1b7)];_0x1cebbe[_0x14af4f(0x21b)](_0x1f529a=>{const _0x239f22=_0x14af4f,_0x2911f3=document['createElement']('div');_0x2911f3['classList'][_0x239f22(0x1ac)]('calendar-weekday'),_0x2911f3['textContent']=_0x1f529a,calendarGrid[_0x239f22(0x224)](_0x2911f3);});const _0x1b76fc=new Date(_0x4461c3,_0x1ef114,0x1)[_0x14af4f(0x200)](),_0x35bf6e=new Date(_0x4461c3,_0x1ef114+0x1,0x0)['getDate']();for(let _0x22f033=0x0;_0x22f033<_0x1b76fc;_0x22f033++){const _0x460edf=document['createElement'](_0x14af4f(0x1d7));_0x460edf[_0x14af4f(0x1a9)][_0x14af4f(0x1ac)]('calendar-day',_0x14af4f(0x25e)),calendarGrid[_0x14af4f(0x224)](_0x460edf);}for(let _0x1d0f2e=0x1;_0x1d0f2e<=_0x35bf6e;_0x1d0f2e++){const _0x4bdbb7=document[_0x14af4f(0x1fa)](_0x14af4f(0x1d7));_0x4bdbb7[_0x14af4f(0x1a9)]['add'](_0x14af4f(0x237)),_0x4bdbb7[_0x14af4f(0x25c)]=_0x1d0f2e;_0x1d0f2e===today['getDate']()&&_0x1ef114===today[_0x14af4f(0x210)]()&&_0x4461c3===today[_0x14af4f(0x24d)]()&&_0x4bdbb7[_0x14af4f(0x1a9)]['add'](_0x14af4f(0x245));const _0x154b65=_0x4461c3+'-'+String(_0x1ef114+0x1)[_0x14af4f(0x1c9)](0x2,'0')+'-'+String(_0x1d0f2e)[_0x14af4f(0x1c9)](0x2,'0'),_0x575f97=calendarEvents[_0x14af4f(0x24c)](_0x16d764=>_0x16d764[_0x14af4f(0x23c)]===_0x154b65);_0x575f97[_0x14af4f(0x21b)](_0x160083=>{const _0x2115a5=_0x14af4f,_0x54d3b8=document[_0x2115a5(0x1fa)](_0x2115a5(0x1d7));_0x54d3b8[_0x2115a5(0x1a9)][_0x2115a5(0x1ac)](_0x2115a5(0x22a)),_0x54d3b8['textContent']=_0x160083[_0x2115a5(0x1a3)],_0x4bdbb7['appendChild'](_0x54d3b8);}),_0x575f97['length']>0x0&&(_0x4bdbb7[_0x14af4f(0x225)][_0x14af4f(0x1c5)]=_0x14af4f(0x21f),_0x4bdbb7[_0x14af4f(0x1be)](_0x14af4f(0x1cf),()=>openCalendarModal(_0x575f97))),calendarGrid['appendChild'](_0x4bdbb7);}}function openCalendarModal(_0x50a788){const _0x3577d7=_0x44cfa5,_0x53e3a5=document[_0x3577d7(0x1fa)](_0x3577d7(0x1d7));_0x53e3a5[_0x3577d7(0x1a9)][_0x3577d7(0x1ac)](_0x3577d7(0x214)),_0x53e3a5['style']='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;';const _0x38b183=document[_0x3577d7(0x1fa)](_0x3577d7(0x1d7));_0x38b183[_0x3577d7(0x225)]=_0x3577d7(0x1b3);const _0x229a45=document['createElement'](_0x3577d7(0x252));_0x229a45[_0x3577d7(0x1a6)]=_0x3577d7(0x1a5),_0x229a45[_0x3577d7(0x225)]='position:absolute;top:10px;right:20px;font-size:28px;cursor:pointer;font-weight:bold;',_0x38b183[_0x3577d7(0x224)](_0x229a45),_0x50a788['forEach'](_0x3636cf=>{const _0x2c82e9=_0x3577d7,_0x4c8072=document[_0x2c82e9(0x1fa)]('div');_0x4c8072[_0x2c82e9(0x225)][_0x2c82e9(0x1ab)]='20px',_0x4c8072[_0x2c82e9(0x1a6)]=_0x2c82e9(0x261)+(_0x3636cf[_0x2c82e9(0x22d)]?'<img\x20src=\x22'+_0x3636cf[_0x2c82e9(0x22d)]+_0x2c82e9(0x204):'')+_0x2c82e9(0x1a0)+_0x3636cf[_0x2c82e9(0x1a3)]+_0x2c82e9(0x1bc)+_0x3636cf[_0x2c82e9(0x1ae)]+_0x2c82e9(0x1df)+_0x3636cf[_0x2c82e9(0x23c)]+_0x2c82e9(0x213),_0x38b183[_0x2c82e9(0x224)](_0x4c8072);}),_0x53e3a5['appendChild'](_0x38b183),document[_0x3577d7(0x1d5)][_0x3577d7(0x224)](_0x53e3a5),_0x229a45['onclick']=()=>_0x53e3a5['remove'](),_0x53e3a5['onclick']=_0x17c3fa=>{const _0x3262df=_0x3577d7;if(_0x17c3fa[_0x3262df(0x1ff)]===_0x53e3a5)_0x53e3a5['remove']();};}document[_0x44cfa5(0x1fd)]('prev-month')?.[_0x44cfa5(0x1be)]('click',()=>{currentMonth--,currentMonth<0x0&&(currentMonth=0xb,currentYear--),renderCalendar(currentMonth,currentYear);}),document['getElementById'](_0x44cfa5(0x1f6))?.[_0x44cfa5(0x1be)](_0x44cfa5(0x1cf),()=>{currentMonth++,currentMonth>0xb&&(currentMonth=0x0,currentYear++),renderCalendar(currentMonth,currentYear);}),renderCalendar(currentMonth,currentYear);const tabButtons=document[_0x44cfa5(0x24e)]('.banner-button'),tabPanes=document[_0x44cfa5(0x24e)](_0x44cfa5(0x24a));tabButtons['forEach'](_0x30372c=>{const _0x52935c=_0x44cfa5;_0x30372c[_0x52935c(0x1be)](_0x52935c(0x1cf),()=>{const _0x138097=_0x52935c;tabButtons['forEach'](_0x2a11b5=>_0x2a11b5[_0x138097(0x1a9)][_0x138097(0x208)](_0x138097(0x1fe))),tabPanes['forEach'](_0x5b14b5=>_0x5b14b5['classList'][_0x138097(0x208)](_0x138097(0x1fe))),_0x30372c[_0x138097(0x1a9)][_0x138097(0x1ac)](_0x138097(0x1fe)),document[_0x138097(0x1fd)](_0x30372c[_0x138097(0x228)][_0x138097(0x1b9)])?.[_0x138097(0x1a9)]['add'](_0x138097(0x1fe));});});async function fetchFooterData(){const _0x485487=_0x44cfa5,_0x38cadd=doc(db,_0x485487(0x222),_0x485487(0x1e0));try{const _0x2c5812=await getDoc(_0x38cadd);if(_0x2c5812[_0x485487(0x241)]()){const _0x1cf091=_0x2c5812[_0x485487(0x231)]();document[_0x485487(0x1fd)](_0x485487(0x212))['innerHTML']=_0x1cf091[_0x485487(0x236)]||_0x485487(0x257),document['getElementById'](_0x485487(0x1cb))[_0x485487(0x1a6)]=_0x485487(0x22c)+_0x1cf091[_0x485487(0x20e)]+_0x485487(0x1ef)+_0x1cf091['email']+'\x22>'+_0x1cf091[_0x485487(0x1f3)]+_0x485487(0x1ed),_0x1cf091['mapUrl']&&(document[_0x485487(0x1fd)](_0x485487(0x1a2))[_0x485487(0x20a)]=_0x1cf091[_0x485487(0x23e)]);}else console[_0x485487(0x1d8)](_0x485487(0x1f2));}catch(_0x1df312){console[_0x485487(0x21c)](_0x485487(0x211),_0x1df312);}}window[_0x44cfa5(0x1be)](_0x44cfa5(0x206),fetchFooterData);const maleTotal=document['getElementById'](_0x44cfa5(0x1dc)),femaleTotal=document['getElementById']('female-total'),maleASOD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x216)),maleGSD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1cd)),malePSAMD=document['getElementById'](_0x44cfa5(0x1cc)),maleBGMD=document['getElementById']('male-bgmd'),maleRAMD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1b2)),malePMD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1ba)),femaleASOD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1da)),femaleGSD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1dd)),femalePSAMD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1f7)),femaleBGMD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1b0)),femaleRAMD=document['getElementById'](_0x44cfa5(0x24b)),femalePMD=document[_0x44cfa5(0x1fd)](_0x44cfa5(0x1bb));onSnapshot(doc(db,_0x44cfa5(0x1c4),_0x44cfa5(0x248)),_0x37c63a=>{const _0x1f6163=_0x44cfa5;if(!_0x37c63a['exists']())return;const _0x4ee55d=_0x37c63a['data']();maleASOD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1e9)]['asod'],maleGSD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1e9)][_0x1f6163(0x239)],malePSAMD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1e9)]['psamd'],maleBGMD['textContent']=_0x4ee55d['male']['bgmd'],maleRAMD['textContent']=_0x4ee55d[_0x1f6163(0x1e9)][_0x1f6163(0x24f)],malePMD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1e9)][_0x1f6163(0x1f1)];const _0x402037=_0x4ee55d[_0x1f6163(0x1e9)]['asod']+_0x4ee55d[_0x1f6163(0x1e9)][_0x1f6163(0x239)]+_0x4ee55d['male'][_0x1f6163(0x25b)]+_0x4ee55d[_0x1f6163(0x1e9)]['bgmd']+_0x4ee55d[_0x1f6163(0x1e9)]['ramd']+_0x4ee55d['male'][_0x1f6163(0x1f1)];maleTotal[_0x1f6163(0x25c)]=_0x402037,femaleASOD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1c0)][_0x1f6163(0x1b4)],femaleGSD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1c0)]['gsd'],femalePSAMD['textContent']=_0x4ee55d['female'][_0x1f6163(0x25b)],femaleBGMD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1c0)][_0x1f6163(0x218)],femaleRAMD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1c0)]['ramd'],femalePMD[_0x1f6163(0x25c)]=_0x4ee55d[_0x1f6163(0x1c0)]['pmd'];const _0x16b8c2=_0x4ee55d['female'][_0x1f6163(0x1b4)]+_0x4ee55d[_0x1f6163(0x1c0)][_0x1f6163(0x239)]+_0x4ee55d[_0x1f6163(0x1c0)]['psamd']+_0x4ee55d[_0x1f6163(0x1c0)][_0x1f6163(0x218)]+_0x4ee55d[_0x1f6163(0x1c0)][_0x1f6163(0x24f)]+_0x4ee55d['female']['pmd'];femaleTotal['textContent']=_0x16b8c2;});async function loadData(){const _0x3ee70d=_0x44cfa5;try{showLoader();const _0x51a2b4=await getDocs(collection(db,_0x3ee70d(0x1ea)));if(content)content[_0x3ee70d(0x1a6)]='';_0x51a2b4[_0x3ee70d(0x21b)](_0x46554d=>{const _0x3324a5=_0x3ee70d,_0x402c29=document[_0x3324a5(0x1fa)](_0x3324a5(0x1d7));_0x402c29['textContent']=JSON['stringify'](_0x46554d[_0x3324a5(0x231)]()),content[_0x3324a5(0x224)](_0x402c29);}),hideLoader();}catch(_0x54bd38){console[_0x3ee70d(0x21c)]('Error\x20fetching\x20data:\x20',_0x54bd38),hideLoader();}}loadData();
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM fully loaded ✅");
+
+  // Navigation burger menu
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+  if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');  
+      burger.classList.toggle('toggle');   
+    });
+  }
+
+  // Load main data
+  await fetchBanner();
+  await loadCampaignThemePublic();
+
+  fetchPosts("announcement", document.getElementById("announcements"));
+  fetchPosts("event", document.getElementById("events"));
+  fetchDocumentations();
+  fetchHotlines();
+  fetchCalendarEvents();
+
+  // Load resources
+await loadResource("accomplishmentReports", "acc-grid");
+await loadResource("specialOrders", "so-grid");
+await loadResource("gadLaws", "gad-grid");
+await loadResource("dswdAgenda", "dswd-grid");
+await loadResource("genderlaws", "gl-grid");
+
+});
+
+/* -----------------------------
+   Banner
+------------------------------ */
+async function fetchBanner() {
+  const bannerImg = document.getElementById("home-banner");
+  if (!bannerImg) return;
+
+  try {
+    const bannerSnap = await getDoc(doc(db, "banners", "site-banner"));
+    bannerImg.src = bannerSnap.exists() ? bannerSnap.data().imageUrl || "images/4ft x 11ft Streamer.png" : "images/4ft x 11ft Streamer.png";
+  } catch (err) {
+    console.error("Error fetching banner:", err);
+    bannerImg.src = "images/4ft x 11ft Streamer.png";
+  }
+}
+
+/* -----------------------------
+   Campaign Theme (Public Site)
+------------------------------ */
+async function loadCampaignThemePublic() {
+  try {
+    const themeDocSnap = await getDoc(doc(db, "siteSettings", "campaignTheme"));
+    if (!themeDocSnap.exists()) return;
+
+    const data = themeDocSnap.data();
+
+    const titleEl = document.getElementById("campaign-title");
+    const descEl = document.getElementById("campaign-description");
+    const imageEl = document.getElementById("campaign-image");
+    const linkEl = document.getElementById("campaign-link"); // ⬅ Added
+
+    if (titleEl) titleEl.textContent = data.title || "";
+    if (descEl)
+      descEl.innerHTML = data.description
+        ? data.description.replace(/\n/g, "<br>")
+        : "";
+    if (imageEl) imageEl.src = data.imageUrl || "";
+
+    // 🔗 NEW: Apply dynamic button link
+    if (linkEl) linkEl.href = data.link || "#";
+
+  } catch (err) {
+    console.error("Error loading campaign theme:", err);
+  }
+}
+
+
+/* -----------------------------
+   Load Resources
+------------------------------ */
+async function loadResource(type, containerId) {
+  try {
+    const qRes = query(
+      collection(db, "resources"), 
+      where("type", "==", type), 
+      orderBy("createdAt", "desc") // no limit
+    );
+    const snap = await getDocs(qRes);
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = ""; // clear old content
+
+    if (snap.empty) {
+      return;
+    }
+
+    snap.docs.forEach(doc => {
+      const data = doc.data();
+
+      const card = document.createElement("div");
+      card.className = "section-box"; // your GAD card design
+      card.innerHTML = `
+        <h3>${data.title || ""}</h3>
+        <p>${data.description || ""}</p>
+        <a href="${data.fileUrl || "#"}" target="_blank">Read More</a>
+      `;
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(`Error loading resources of type "${type}":`, err);
+  }
+}
+
+
+function fetchPosts(type, container) {
+  if (!container) return;
+  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
+  onSnapshot(q, (snapshot) => {
+    container.innerHTML = "";
+    const filtered = snapshot.docs.filter(doc => doc.data().type === type);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<p>No ${type}s yet.</p>`;
+      return;
+    }
+
+    filtered.forEach((doc) => {
+      const d = doc.data();
+      const div = document.createElement("div");
+      div.classList.add("announcement-item");
+
+      const maxLength = 120;
+      const shortDesc = d.description.length > maxLength ? d.description.substring(0, maxLength) + "…" : d.description;
+
+      div.innerHTML = `
+        ${d.imageUrl ? `<img src="${d.imageUrl}" class="announcement-img" />` : ""}
+        <h1>${d.title}</h1>
+        <p>${shortDesc}</p>
+        <small>${d.createdAt?.toDate ? d.createdAt.toDate().toLocaleString() : ""}</small>
+        <hr>
+      `;
+
+      div.addEventListener("click", () => openPostModal(d));
+      container.appendChild(div);
+    });
+  }, (error) => {
+    console.error(`Error fetching ${type}:`, error);
+    container.innerHTML = `<p>Error loading ${type}s.</p>`;
+  });
+}
+
+function openPostModal(data) {
+  const overlay = document.createElement("div");
+  overlay.classList.add("post-modal-overlay");
+  overlay.innerHTML = `
+    <div class="post-modal">
+      <span class="close-modal">&times;</span>
+      ${data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.title}">` : ""}
+      <h2>${data.title}</h2>
+      <p>${data.description}</p>
+      <small>${data.createdAt?.toDate ? data.createdAt.toDate().toLocaleString() : ""}</small>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.querySelector(".close-modal").onclick = () => overlay.remove();
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+/* -----------------------------
+   Documentation Slider
+------------------------------ */
+const docSlider = document.getElementById("doc-slider");
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+
+function fetchDocumentations() {
+  if (!docSlider) return;
+
+  const q = query(collection(db, "documentations"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snapshot) => {
+    docSlider.innerHTML = "";
+    if (snapshot.empty) {
+      docSlider.innerHTML = `<p>No documentation images uploaded yet.</p>`;
+      return;
+    }
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const slide = document.createElement("div");
+      slide.classList.add("card-slide");
+      slide.innerHTML = `<img src="${data.imageUrl}" alt="Documentation">`;
+      docSlider.appendChild(slide);
+    });
+
+    initSlider();
+  }, (error) => {
+    console.error("Error fetching documentations:", error);
+    docSlider.innerHTML = `<p>Error loading documentation.</p>`;
+  });
+}
+
+function initSlider() {
+  const slides = document.querySelectorAll(".card-slide");
+  if (!slides.length) return;
+
+  let current = 0;
+  const updateSlides = () => {
+    slides.forEach((slide, i) => {
+      slide.classList.remove("active", "prev", "next");
+      if (i === current) slide.classList.add("active");
+      else if (i === (current - 1 + slides.length) % slides.length) slide.classList.add("prev");
+      else if (i === (current + 1) % slides.length) slide.classList.add("next");
+    });
+  };
+
+  nextBtn && (nextBtn.onclick = () => { current = (current + 1) % slides.length; updateSlides(); });
+  prevBtn && (prevBtn.onclick = () => { current = (current - 1 + slides.length) % slides.length; updateSlides(); });
+
+  setInterval(() => { current = (current + 1) % slides.length; updateSlides(); }, 4000);
+  updateSlides();
+}
+
+// Function to fetch and display hotlines from Firestore
+async function fetchHotlines() {
+  const hotlinesContainer = document.querySelector("#hotlines .hotline-container");
+  if (!hotlinesContainer) return;
+
+  hotlinesContainer.innerHTML = ""; // Clear any existing hotlines
+
+  try {
+    // Query to fetch hotlines from Firestore, ordered by category
+    const q = query(collection(db, "hotlines"), orderBy("category"));
+    const snapshot = await getDocs(q);
+
+    // Iterate through the documents and add them to the container
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const hotlineCard = document.createElement("div");
+      hotlineCard.classList.add("hotline-card");
+
+      // Create the HTML structure for each hotline
+      hotlineCard.innerHTML = `
+        <h3>${data.category}</h3>
+        <ul>
+          <li>
+            <strong>${data.name}:</strong> ${data.number}
+          </li>
+        </ul>
+      `;
+
+      // Append the hotline card to the container
+      hotlinesContainer.appendChild(hotlineCard);
+    });
+  } catch (error) {
+    console.error("Error fetching hotlines: ", error);
+    hotlinesContainer.innerHTML = "Error fetching hotlines.";
+  }
+}
+
+// Fetch hotlines when the page loads
+window.onload = function() {
+  fetchHotlines();  // Call the fetchHotlines function on page load
+};
+
+/* -----------------------------
+   Calendar
+------------------------------ */
+const calendarGrid = document.querySelector('.calendar-grid');
+const monthYearLabel = document.getElementById('calendar-month-year');
+
+let calendarEvents = [];
+let today = new Date();
+let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+
+function fetchCalendarEvents() {
+  const q = query(collection(db, "calendarActivities"), orderBy("date", "asc"));
+  onSnapshot(q, (snapshot) => {
+    calendarEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderCalendar(currentMonth, currentYear);
+  }, (error) => console.error("Error fetching calendar events:", error));
+}
+
+function renderCalendar(month, year) {
+  if (!calendarGrid || !monthYearLabel) return;
+
+  calendarGrid.innerHTML = "";
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(year, month));
+  monthYearLabel.textContent = `${monthName} ${year}`;
+
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  daysOfWeek.forEach(day => {
+    const div = document.createElement("div");
+    div.classList.add("calendar-weekday");
+    div.textContent = day;
+    calendarGrid.appendChild(div);
+  });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.classList.add("calendar-day", "inactive");
+    calendarGrid.appendChild(empty);
+  }
+
+  for (let i = 1; i <= lastDate; i++) {
+    const day = document.createElement("div");
+    day.classList.add("calendar-day");
+    day.textContent = i;
+
+    if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+      day.classList.add("today");
+    }
+
+    const dateStr = `${year}-${String(month + 1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
+    const dayEvents = calendarEvents.filter(ev => ev.date === dateStr);
+
+    dayEvents.forEach(ev => {
+      const evDiv = document.createElement("div");
+      evDiv.classList.add("calendar-event");
+      evDiv.textContent = ev.title;
+      day.appendChild(evDiv);
+    });
+
+    if (dayEvents.length > 0) {
+      day.style.cursor = "pointer";
+      day.addEventListener("click", () => openCalendarModal(dayEvents));
+    }
+
+    calendarGrid.appendChild(day);
+  }
+}
+
+function openCalendarModal(events) {
+  const overlay = document.createElement("div");
+  overlay.classList.add("calendar-modal-overlay");
+  overlay.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;";
+
+  const modal = document.createElement("div");
+  modal.style = "background:#fff;border-radius:10px;padding:20px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto;position:relative;";
+
+  const closeBtn = document.createElement("span");
+  closeBtn.innerHTML = "&times;";
+  closeBtn.style = "position:absolute;top:10px;right:20px;font-size:28px;cursor:pointer;font-weight:bold;";
+
+  modal.appendChild(closeBtn);
+
+  events.forEach(ev => {
+    const evDiv = document.createElement("div");
+    evDiv.style.marginBottom = "20px";
+    evDiv.innerHTML = `
+      ${ev.imageUrl ? `<img src="${ev.imageUrl}" style="width:100%;border-radius:8px;">` : ""}
+      <h2>${ev.title}</h2>
+      <p>${ev.description}</p>
+      <small>${ev.date}</small>
+      <hr>
+    `;
+    modal.appendChild(evDiv);
+  });
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  closeBtn.onclick = () => overlay.remove();
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+}
+
+/* -----------------------------
+   Calendar Navigation
+------------------------------ */
+document.getElementById("prev-month")?.addEventListener("click", () => {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar(currentMonth, currentYear);
+});
+
+document.getElementById("next-month")?.addEventListener("click", () => {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderCalendar(currentMonth, currentYear);
+});
+
+// Initialize calendar
+renderCalendar(currentMonth, currentYear);
+
+
+const tabButtons = document.querySelectorAll(".banner-button");
+const tabPanes = document.querySelectorAll(".tab-pane");
+
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    tabButtons.forEach(b => b.classList.remove("active"));
+    tabPanes.forEach(p => p.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.tab)?.classList.add("active");
+  });
+});
+
+
+// Function to fetch footer data from Firestore
+async function fetchFooterData() {
+  // Reference to the Firestore document where footer data is stored
+  const footerDocRef = doc(db, "footer", "footer_data");  // Collection "footer", Document "footer_data"
+  
+  try {
+    const footerDoc = await getDoc(footerDocRef);
+
+    if (footerDoc.exists()) {
+      const data = footerDoc.data();
+      
+      // Update the footer display elements with the fetched data
+      document.getElementById('display-address').innerHTML = data.address || "No address set.";
+      document.getElementById('display-contact').innerHTML = `
+        Tel. Nos.: <strong>${data.phone}</strong><br>
+        Email: <a href="mailto:${data.email}">${data.email}</a>
+      `;
+      
+      // Optionally update the map iframe URL if it's part of the data
+      if (data.mapUrl) {
+        document.getElementById('footer-map').src = data.mapUrl;
+      }
+    } else {
+      console.log("No footer data found.");
+    }
+  } catch (error) {
+    console.error("Error fetching footer data:", error);
+  }
+}
+
+// Call fetchFooterData when the page loads to populate the footer
+window.addEventListener('DOMContentLoaded', fetchFooterData);
+
+
+const maleTotal = document.getElementById("male-total");
+const femaleTotal = document.getElementById("female-total");
+
+// Division values (male)
+const maleASOD = document.getElementById("male-asod");
+const maleGSD = document.getElementById("male-gsd");
+const malePSAMD = document.getElementById("male-psamd");
+const maleBGMD = document.getElementById("male-bgmd");
+const maleRAMD = document.getElementById("male-ramd");
+const malePMD = document.getElementById("male-pmd");
+
+// Division values (female)
+const femaleASOD = document.getElementById("female-asod");
+const femaleGSD = document.getElementById("female-gsd");
+const femalePSAMD = document.getElementById("female-psamd");
+const femaleBGMD = document.getElementById("female-bgmd");
+const femaleRAMD = document.getElementById("female-ramd");
+const femalePMD = document.getElementById("female-pmd");
+
+/* LIVE FETCH USING onSnapshot */
+onSnapshot(doc(db, "home", "sexData"), (snap) => {
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  // ---- MALE ----
+  maleASOD.textContent = data.male.asod;
+  maleGSD.textContent = data.male.gsd;
+  malePSAMD.textContent = data.male.psamd;
+  maleBGMD.textContent = data.male.bgmd;
+  maleRAMD.textContent = data.male.ramd;
+  malePMD.textContent = data.male.pmd;
+
+  const totalMale =
+    data.male.asod +
+    data.male.gsd +
+    data.male.psamd +
+    data.male.bgmd +
+    data.male.ramd +
+    data.male.pmd;
+
+  maleTotal.textContent = totalMale;
+
+  // ---- FEMALE ----
+  femaleASOD.textContent = data.female.asod;
+  femaleGSD.textContent = data.female.gsd;
+  femalePSAMD.textContent = data.female.psamd;
+  femaleBGMD.textContent = data.female.bgmd;
+  femaleRAMD.textContent = data.female.ramd;
+  femalePMD.textContent = data.female.pmd;
+
+  const totalFemale =
+    data.female.asod +
+    data.female.gsd +
+    data.female.psamd +
+    data.female.bgmd +
+    data.female.ramd +
+    data.female.pmd;
+
+  femaleTotal.textContent = totalFemale;
+});
+
+async function loadData() {
+  try {
+    showLoader();
+
+    const querySnapshot = await getDocs(collection(db, "your-collection-name"));
+    if(content) content.innerHTML = ''; // clear existing content
+    querySnapshot.forEach((doc) => {
+      const div = document.createElement('div');
+      div.textContent = JSON.stringify(doc.data());
+      content.appendChild(div);
+    });
+
+    hideLoader();
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    hideLoader();
+  }
+}
+
+// Call the function
+loadData();
