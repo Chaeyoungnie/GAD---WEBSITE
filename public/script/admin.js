@@ -128,6 +128,7 @@ async function displayPosts(type, containerId) {
 }
 
 /* ✅ Edit Post */
+/* ✅ Edit Post (with image support) */
 async function enterEditPost({ id, type, container }) {
   const containerEl = document.getElementById(container);
   if (!containerEl) return;
@@ -138,13 +139,27 @@ async function enterEditPost({ id, type, container }) {
 
   const titleEl = postCard.querySelector("h4");
   const descEl = postCard.querySelector("p");
+  const imgEl = postCard.querySelector("img");
+
   const oldTitle = titleEl.textContent;
   const oldDesc = descEl.textContent;
+  const oldImage = imgEl ? imgEl.src : "";
 
   postCard.innerHTML = `
     <input type="text" id="edit-title-${id}" value="${oldTitle}" style="width:100%;margin-bottom:5px;">
     <textarea id="edit-desc-${id}" style="width:100%;height:80px;">${oldDesc}</textarea>
+
+    <div style="margin-top:10px;">
+      <label><strong>Current Image:</strong></label><br>
+      <img src="${oldImage}" style="width:120px;border-radius:5px;margin-top:5px;" />
+    </div>
+
     <div style="margin-top:8px;">
+      <label><strong>Upload New Image (optional):</strong></label>
+      <input type="file" id="edit-image-${id}" accept="image/*" style="margin-top:5px;">
+    </div>
+
+    <div style="margin-top:12px;">
       <button class="save-btn">💾 Save</button>
       <button class="cancel-btn">❌ Cancel</button>
     </div>
@@ -153,18 +168,32 @@ async function enterEditPost({ id, type, container }) {
   postCard.querySelector(".save-btn").addEventListener("click", async () => {
     const newTitle = document.getElementById(`edit-title-${id}`).value.trim();
     const newDesc = document.getElementById(`edit-desc-${id}`).value.trim();
+    const newImageFile = document.getElementById(`edit-image-${id}`).files[0];
 
     if (!newTitle || !newDesc) {
       alert("Please fill all fields.");
       return;
     }
 
+    let updatedImageURL = oldImage;
+
     try {
+      /* 🚀 If user selected a new image, upload it */
+      if (newImageFile) {
+        const storageRef = ref(storage, `postImages/${id}_${Date.now()}`);
+        await uploadBytes(storageRef, newImageFile);
+        updatedImageURL = await getDownloadURL(storageRef);
+      }
+
+      /* 🚀 Save updated fields to Firestore */
       await updateDoc(doc(db, "posts", id), {
         title: newTitle,
-        description: newDesc
+        description: newDesc,
+        image: updatedImageURL
       });
+
       displayPosts(type, container);
+
     } catch (err) {
       console.error(err);
       alert("Error saving changes.");
@@ -175,6 +204,7 @@ async function enterEditPost({ id, type, container }) {
     displayPosts(type, container);
   });
 }
+
 
 /* ✅ Delete Post */
 async function deletePost({ id, type, container }) {
