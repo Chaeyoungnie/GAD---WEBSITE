@@ -194,16 +194,22 @@
   <!-- Hotlines Form -->
   <div class="form-card">
     <h3>Add Hotline</h3>
-    <form id="hotline-form">
-      <!-- New Input for Hotline Category -->
-      <input id="hotline-category" type="text" placeholder="Hotline Category (e.g. Gender-Related)" required>
 
-      <!-- Hotline Info Inputs -->
-      <input id="hotline-name" type="text" placeholder="Hotline Name" required>
-      <input id="hotline-number" type="text" placeholder="Hotline Number" required>
-      
-      <button type="submit">Add Hotline</button>
-    </form>
+<form id="hotline-form">
+
+  <label><strong>Hotline Name</strong></label>
+  <input id="hotline-name" type="text" placeholder="Hotline Name" required>
+
+  <label><strong>Hotline Link (Google Sheet or URL)</strong></label>
+  <input id="hotline-link" type="text" placeholder="https://..." required>
+
+  <label><strong>Category</strong></label>
+  <input id="hotline-category" type="text" placeholder="Category" required>
+
+  <button type="submit">Add Hotline</button>
+</form>
+
+
     <p class="status" id="hotline-status"></p>
   </div>
 
@@ -211,6 +217,7 @@
   <h2 class="list-title">All Hotlines</h2>
   <div id="hotlines-list" class="grid-list"></div>
 </section>
+
 
 
 <!-- ACTIVITIES -->

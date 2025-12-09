@@ -37,12 +37,21 @@ onAuthStateChanged(auth, (user) => {
 
 /* ✅ Tab Switcher Global */
 window.openTab = function(tabName) {
+  // Hide all tabs
   document.querySelectorAll(".tab-content").forEach(tab => {
     tab.style.display = "none";
   });
+
+  // Show the selected tab
   const target = document.getElementById(tabName);
   if (target) target.style.display = "block";
+
+  // 🔥 Load hotlines automatically when Hotlines tab is opened
+  if (tabName === "tab-hotlines") {
+    fetchHotlines();
+  }
 };
+
 
 /* ✅ Prevent page refresh */
 document.querySelectorAll("form").forEach(form => {
@@ -128,7 +137,7 @@ async function displayPosts(type, containerId) {
 }
 
 /* ✅ Edit Post */
-/* ✅ Edit Post (with image support) */
+/* Edit Post using Cloudinary instead of Firebase Storage */
 async function enterEditPost({ id, type, container }) {
   const containerEl = document.getElementById(container);
   if (!containerEl) return;
@@ -178,22 +187,19 @@ async function enterEditPost({ id, type, container }) {
     let updatedImageURL = oldImage;
 
     try {
-      /* 🚀 If user selected a new image, upload it */
+      // 🚀 Upload new image to Cloudinary
       if (newImageFile) {
-        const storageRef = ref(storage, `postImages/${id}_${Date.now()}`);
-        await uploadBytes(storageRef, newImageFile);
-        updatedImageURL = await getDownloadURL(storageRef);
+        updatedImageURL = await uploadToCloudinary(newImageFile);
       }
 
-      /* 🚀 Save updated fields to Firestore */
+      // Save to Firestore
       await updateDoc(doc(db, "posts", id), {
         title: newTitle,
         description: newDesc,
-        image: updatedImageURL
+        imageUrl: updatedImageURL
       });
 
       displayPosts(type, container);
-
     } catch (err) {
       console.error(err);
       alert("Error saving changes.");
@@ -204,6 +210,8 @@ async function enterEditPost({ id, type, container }) {
     displayPosts(type, container);
   });
 }
+
+
 
 
 /* ✅ Delete Post */
@@ -1243,57 +1251,43 @@ window.deleteMember = async function (memberId) {
 document.addEventListener('DOMContentLoaded', function () {
   displayMembers();
 });
-// Function to save a new hotline to Firestore
-async function saveHotlineToFirestore(category, name, number) {
-  try {
-    // Add a new hotline document under the 'hotlines' collection
-    await addDoc(collection(db, "hotlines"), {
-      category: category,
-      name: name,
-      number: number,
-      createdAt: serverTimestamp()  // Automatically adds timestamp
-    });
 
-    document.getElementById("hotline-status").textContent = "Hotline added successfully!";
-    fetchHotlines(); // Refresh the hotlines list
-    document.getElementById("hotline-form").reset(); // Reset the form
-  } catch (error) {
-    document.getElementById("hotline-status").textContent = "Error adding hotline: " + error.message;
-  }
-}
+// -------------------- HOTLINES MODULE (NO IMAGE UPLOAD) --------------------
 
-// Function to fetch and display hotlines from Firestore
+// Fetch & display hotlines
 async function fetchHotlines() {
   const hotlinesList = document.getElementById("hotlines-list");
   if (!hotlinesList) return;
 
-  hotlinesList.innerHTML = ""; // Clear existing hotlines
+  hotlinesList.innerHTML = `<p>Loading hotlines...</p>`;
 
   try {
-    // Get all documents from the 'hotlines' collection
-    const q = query(collection(db, "hotlines"), orderBy("category"));
+    const q = query(collection(db, "hotlines"), orderBy("createdAt"));
     const snapshot = await getDocs(q);
 
-    // Group hotlines by category
+    hotlinesList.innerHTML = "";
+
+    if (snapshot.empty) {
+      hotlinesList.innerHTML = "<p>No hotlines available.</p>";
+      return;
+    }
+
     const categorizedHotlines = {};
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const category = data.category;
-      const hotlineId = doc.id;
+    snapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      const category = d.category || "Uncategorized";
 
-      if (!categorizedHotlines[category]) {
-        categorizedHotlines[category] = [];
-      }
+      if (!categorizedHotlines[category]) categorizedHotlines[category] = [];
 
       categorizedHotlines[category].push({
-        id: hotlineId,
-        name: data.name,
-        number: data.number
+        id: docSnap.id,
+        name: d.name,
+        link: d.link
       });
     });
 
-    // Render hotlines grouped by category
+    // Render grouped cards
     Object.keys(categorizedHotlines).forEach(category => {
       const card = document.createElement("div");
       card.classList.add("hotline-card");
@@ -1301,121 +1295,145 @@ async function fetchHotlines() {
       let html = `<h3>${category}</h3><ul>`;
       categorizedHotlines[category].forEach(item => {
         html += `
-          <li>
-            <strong>${item.name}:</strong> ${item.number}
+          <li style="display:flex; align-items:center; margin-bottom:6px;">
+            <a href="${item.link}" target="_blank" style="flex-grow:1;">${item.name}</a>
             <button class="edit-btn" data-id="${item.id}">Edit</button>
             <button class="delete-btn" data-id="${item.id}">Delete</button>
           </li>
         `;
       });
       html += `</ul>`;
-
       card.innerHTML = html;
+
       hotlinesList.appendChild(card);
     });
 
-    // Attach event listeners to Edit and Delete buttons
-    document.querySelectorAll('.edit-btn').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const hotlineId = e.target.getAttribute('data-id');
-        const listItem = e.target.closest('li');
-        const name = listItem.querySelector('strong').textContent.replace(':', '').trim();
-        const number = listItem.childNodes[1].textContent.trim();
-        editHotlineForm(hotlineId, name, number);
-      });
+    // Attach edit/delete events
+    hotlinesList.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.addEventListener("click", () => loadHotlineForEdit(btn.dataset.id));
     });
 
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const hotlineId = e.target.getAttribute('data-id');
-        deleteHotline(hotlineId);
-      });
+    hotlinesList.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", () => deleteHotline(btn.dataset.id));
     });
 
-  } catch (error) {
-    console.error("Error fetching hotlines: ", error);
-    hotlinesList.innerHTML = "Error fetching hotlines.";
+  } catch (err) {
+    console.error("Fetch hotlines error:", err);
+    hotlinesList.innerHTML = "<p>Error fetching hotlines.</p>";
   }
 }
 
-// Function to handle editing a hotline
-function editHotlineForm(hotlineId, name, number) {
-  // Prefill the form with existing values
-  document.getElementById("hotline-name").value = name;
-  document.getElementById("hotline-number").value = number;
-
-  // Create a new Save Changes button
-  const saveButton = document.createElement("button");
-  saveButton.textContent = "Save Changes";
-  saveButton.onclick = () => updateHotline(hotlineId);
-
-  // Remove the previous Save button if it exists
-  const existingSaveButton = document.querySelector("#hotline-form button");
-  if (existingSaveButton) {
-    existingSaveButton.remove();
-  }
-
-  // Append the Save Changes button to the form
-  document.getElementById("hotline-form").appendChild(saveButton);
-}
-
-// Function to update a hotline in Firestore
-async function updateHotline(hotlineId) {
-  const category = document.getElementById("hotline-category").value;
-  const name = document.getElementById("hotline-name").value;
-  const number = document.getElementById("hotline-number").value;
-
-  if (category && name && number) {
-    try {
-      const hotlineRef = doc(db, "hotlines", hotlineId);
-      await updateDoc(hotlineRef, {
-        category: category,
-        name: name,
-        number: number
-      });
-
-      alert("Hotline updated successfully!");
-      fetchHotlines();
-      document.getElementById("hotline-form").reset();
-    } catch (error) {
-      console.error("Error updating hotline:", error);
-    }
-  } else {
-    alert("Please fill in all fields before saving.");
-  }
-}
-
-// Function to delete a hotline from Firestore
-async function deleteHotline(hotlineId) {
-  const hotlineRef = doc(db, "hotlines", hotlineId);
+// Add new hotline
+async function saveHotlineToFirestore(name, link, category) {
   try {
-    await deleteDoc(hotlineRef);  // Delete the document
-    fetchHotlines(); // Refresh the list after deletion
-    alert("Hotline deleted successfully!");
-  } catch (error) {
-    console.error("Error deleting hotline:", error);
+    await addDoc(collection(db, "hotlines"), {
+      name,
+      link,
+      category,
+      createdAt: serverTimestamp()
+    });
+
+    alert("Hotline added successfully!");
+    resetHotlineForm();
+    fetchHotlines();
+  } catch (err) {
+    console.error("Save hotline error:", err);
+    alert("Error adding hotline.");
   }
 }
 
-// Fetch and display hotlines on page load
-window.onload = function () {
-  fetchHotlines();
-};
+// Load hotline to form for editing
+async function loadHotlineForEdit(id) {
+  const refDoc = doc(db, "hotlines", id);
+  const snap = await getDoc(refDoc);
+  if (!snap.exists()) return;
 
-// Event listener for the hotline form submission
-document.getElementById("hotline-form").addEventListener("submit", function (e) {
+  const d = snap.data();
+
+  const form = document.getElementById("hotline-form");
+  form.innerHTML = `
+    <label><strong>Hotline Name</strong></label>
+    <input id="hotline-name" type="text" value="${d.name}" required>
+
+    <label><strong>Hotline Link</strong></label>
+    <input id="hotline-link" type="text" value="${d.link}" required>
+
+    <label><strong>Category</strong></label>
+    <input id="hotline-category" type="text" value="${d.category}" required>
+
+    <div>
+      <button id="save-hotline-btn">💾 Save</button>
+      <button id="cancel-edit-btn">❌ Cancel</button>
+    </div>
+  `;
+
+  document.getElementById("save-hotline-btn").onclick = async e => {
+    e.preventDefault();
+    await updateHotline(id);
+  };
+
+  document.getElementById("cancel-edit-btn").onclick = e => {
+    e.preventDefault();
+    resetHotlineForm();
+  };
+}
+
+// Update hotline (no image)
+async function updateHotline(id) {
+  const name = document.getElementById("hotline-name").value;
+  const link = document.getElementById("hotline-link").value;
+  const category = document.getElementById("hotline-category").value;
+
+  await updateDoc(doc(db, "hotlines", id), { name, link, category });
+
+  alert("Hotline updated!");
+  resetHotlineForm();
+  fetchHotlines();
+}
+
+// Delete hotline
+async function deleteHotline(id) {
+  if (!confirm("Are you sure you want to delete this hotline?")) return;
+  await deleteDoc(doc(db, "hotlines", id));
+  fetchHotlines();
+}
+
+// Reset form to Add mode
+function resetHotlineForm() {
+  const form = document.getElementById("hotline-form");
+  form.innerHTML = `
+    <label><strong>Hotline Name</strong></label>
+    <input id="hotline-name" type="text" placeholder="Hotline Name" required>
+
+    <label><strong>Hotline Link (Google Sheet or URL)</strong></label>
+    <input id="hotline-link" type="text" placeholder="https://..." required>
+
+    <label><strong>Category</strong></label>
+    <input id="hotline-category" type="text" placeholder="Category" required>
+
+    <button type="submit">Add Hotline</button>
+  `;
+}
+
+// Handle Add Hotline submit
+document.getElementById("hotline-form").addEventListener("submit", async e => {
   e.preventDefault();
 
-  const category = document.getElementById("hotline-category").value;
   const name = document.getElementById("hotline-name").value;
-  const number = document.getElementById("hotline-number").value;
+  const link = document.getElementById("hotline-link").value;
+  const category = document.getElementById("hotline-category").value;
 
-  if (category && name && number) {
-    saveHotlineToFirestore(category, name, number);
-  } else {
-    document.getElementById("hotline-status").textContent = "Please fill in all fields.";
+  if (!name || !link || !category) {
+    alert("Please fill in all fields.");
+    return;
   }
+
+  await saveHotlineToFirestore(name, link, category);
 });
+
+// Auto-load on page load
+window.addEventListener("DOMContentLoaded", fetchHotlines);
+
 
 
 

@@ -261,39 +261,55 @@ async function fetchHotlines() {
   hotlinesContainer.innerHTML = ""; // Clear any existing hotlines
 
   try {
-    // Query to fetch hotlines from Firestore, ordered by category
     const q = query(collection(db, "hotlines"), orderBy("category"));
     const snapshot = await getDocs(q);
 
-    // Iterate through the documents and add them to the container
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const hotlineCard = document.createElement("div");
-      hotlineCard.classList.add("hotline-card");
+    if (snapshot.empty) {
+      hotlinesContainer.innerHTML = "<p>No hotlines available.</p>";
+      return;
+    }
 
-      // Create the HTML structure for each hotline
-      hotlineCard.innerHTML = `
-        <h3>${data.category}</h3>
-        <ul>
-          <li>
-            <strong>${data.name}:</strong> ${data.number}
-          </li>
-        </ul>
-      `;
+    // Group by category
+    const grouped = {};
 
-      // Append the hotline card to the container
-      hotlinesContainer.appendChild(hotlineCard);
+    snapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      const cat = d.category || "Uncategorized";
+
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(d);
     });
+
+    // Render cards by category
+    Object.keys(grouped).forEach(category => {
+      const card = document.createElement("div");
+      card.classList.add("hotline-card");
+
+      let html = `<h3>${category}</h3><ul>`;
+
+      grouped[category].forEach(item => {
+        html += `
+          <li style="margin-bottom:8px;">
+            <a href="${item.link}" target="_blank">
+              <strong>${item.name}</strong>
+            </a>
+          </li>
+        `;
+      });
+
+      html += `</ul>`;
+      card.innerHTML = html;
+
+      hotlinesContainer.appendChild(card);
+    });
+
   } catch (error) {
     console.error("Error fetching hotlines: ", error);
     hotlinesContainer.innerHTML = "Error fetching hotlines.";
   }
 }
 
-// Fetch hotlines when the page loads
-window.onload = function() {
-  fetchHotlines();  // Call the fetchHotlines function on page load
-};
+window.addEventListener("DOMContentLoaded", fetchHotlines);
 
 /* -----------------------------
    Calendar
